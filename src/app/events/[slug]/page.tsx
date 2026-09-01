@@ -1,5 +1,4 @@
 import { events } from "@/data/events";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type EventDetailProps = {

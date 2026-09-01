@@ -1,4 +1,4 @@
-import { EventCategory, validCategoryOptions } from "@/types/event";
+import { validCategoryOptions } from "@/types/event";
 import Link from "next/link";
 
 type CategoryFilterProps = {
