@@ -25,9 +25,11 @@ export default async function AppPage({ searchParams }: AppPageProps) {
     <div>
       <CategoryFilter activeCategory={category} />
 
-      {filteredEvents.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {filteredEvents.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
     </div>
   );
 }
