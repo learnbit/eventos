@@ -11,6 +11,7 @@ export default function EventCard({ event }: EventCardProps) {
 
   return (
     <div className="bg-surface border border-border rounded-md p-4 w-full space-y-2">
+      <div className="w-full h-40 bg-surface-hover rounded-md mb-4 aspect-4/3"></div>
       <h2 className="text-lg font-semibold">
         <Link href={`/events/${slug}`}>{title}</Link>
       </h2>
