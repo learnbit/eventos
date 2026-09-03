@@ -6,7 +6,7 @@ export const events: Event[] = [
     slug: "garage-sale-cala-cala",
     title: "Garage Sale Cala Cala",
     category: "garage-sale",
-    image: "/images/events/garage-sale-cala-cala.jpg",
+    image: "/images/events/image1.png",
     date: "2026-09-05T09:00:00",
     location: "Cala Cala, Cochabamba",
     description:
@@ -17,7 +17,7 @@ export const events: Event[] = [
     slug: "garage-sale-queru-queru",
     title: "Garage Sale Queru Queru",
     category: "garage-sale",
-    image: "/images/events/garage-sale-queru-queru.jpg",
+    image: "/images/events/image2.png",
     date: "2026-09-06T10:00:00",
     location: "Queru Queru, Cochabamba",
     description:
@@ -28,7 +28,7 @@ export const events: Event[] = [
     slug: "garage-sale-tiquipaya",
     title: "Garage Sale Tiquipaya",
     category: "garage-sale",
-    image: "/images/events/garage-sale-tiquipaya.jpg",
+    image: "/images/events/image3.png",
     date: "2026-09-12T08:30:00",
     location: "Tiquipaya, Cochabamba",
     description:
@@ -39,7 +39,7 @@ export const events: Event[] = [
     slug: "kermesse-san-martin",
     title: "Kermesse San Martín",
     category: "kermesse",
-    image: "/images/events/kermesse-san-martin.jpg",
+    image: "/images/events/image1.png",
     date: "2026-09-13T11:00:00",
     location: "Cercado, Cochabamba",
     description:
@@ -50,7 +50,7 @@ export const events: Event[] = [
     slug: "kermesse-colegio-americano",
     title: "Kermesse Colegio Americano",
     category: "kermesse",
-    image: "/images/events/kermesse-colegio-americano.jpg",
+    image: "/images/events/image2.png",
     date: "2026-09-19T10:00:00",
     location: "Zona Norte, Cochabamba",
     description:
@@ -61,7 +61,7 @@ export const events: Event[] = [
     slug: "kermesse-plaza-colon",
     title: "Kermesse Plaza Colón",
     category: "kermesse",
-    image: "/images/events/kermesse-plaza-colon.jpg",
+    image: "/images/events/image3.png",
     date: "2026-09-20T12:00:00",
     location: "Plaza Colón, Cochabamba",
     description:
@@ -72,7 +72,7 @@ export const events: Event[] = [
     slug: "feria-emprendedores-cochabamba",
     title: "Feria de Emprendedores",
     category: "feria",
-    image: "/images/events/feria-emprendedores.jpg",
+    image: "/images/events/image1.png",
     date: "2026-09-26T09:00:00",
     location: "El Prado, Cochabamba",
     description:
@@ -83,7 +83,7 @@ export const events: Event[] = [
     slug: "feria-artesanal-tiquipaya",
     title: "Feria Artesanal Tiquipaya",
     category: "feria",
-    image: "/images/events/feria-artesanal-tiquipaya.jpg",
+    image: "/images/events/image2.png",
     date: "2026-09-27T10:00:00",
     location: "Plaza Principal de Tiquipaya",
     description:
@@ -94,7 +94,7 @@ export const events: Event[] = [
     slug: "feria-gastronomica-cochabamba",
     title: "Feria Gastronómica Cochabamba",
     category: "feria",
-    image: "/images/events/feria-gastronomica.jpg",
+    image: "/images/events/image3.png",
     date: "2026-10-03T11:00:00",
     location: "Parque Lincoln, Cochabamba",
     description:
