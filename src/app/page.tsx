@@ -4,7 +4,9 @@ import { events } from "@/data/events";
 import { validCategoryOptions } from "@/types/event";
 
 type AppPageProps = {
-  searchParams: Promise<{ category: string | undefined }>;
+  searchParams: Promise<{
+    category: string | undefined;
+  }>;
 };
 
 export default async function AppPage({ searchParams }: AppPageProps) {
@@ -20,6 +22,13 @@ export default async function AppPage({ searchParams }: AppPageProps) {
   } else {
     filteredEvents = [...events];
   }
+
+  filteredEvents = filteredEvents.toSorted((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+
+    return dateA - dateB;
+  });
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-4">
