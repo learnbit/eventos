@@ -1,5 +1,6 @@
 "use client";
 
+import { createEvent } from "@/actions/event";
 import { Event, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
@@ -31,12 +32,13 @@ export default function EventForm({ event }: EventFormProps) {
   }
 
   return (
-    <form className="max-w-2xl flex flex-col gap-4">
+    <form className="max-w-2xl flex flex-col gap-4" action={createEvent}>
       <h1 className="text-2xl font-semibold mb-4">{formTitle}</h1>
       <div className="flex flex-col gap-2">
         <label>Titulo</label>
         <input
           type="text"
+          name="title"
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           defaultValue={event?.title}
         />
@@ -45,6 +47,7 @@ export default function EventForm({ event }: EventFormProps) {
       <div className="flex flex-col gap-2">
         <label>Categoria</label>
         <select
+          name="category"
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           defaultValue={event?.category}
         >
@@ -72,6 +75,7 @@ export default function EventForm({ event }: EventFormProps) {
           type="file"
           accept="image/*"
           onChange={handleImageChange}
+          name="image"
         />
       </div>
 
@@ -82,6 +86,7 @@ export default function EventForm({ event }: EventFormProps) {
             type="date"
             className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
             defaultValue={date}
+            name="date"
           />
         </div>
 
@@ -91,6 +96,7 @@ export default function EventForm({ event }: EventFormProps) {
             type="time"
             className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
             defaultValue={time}
+            name="time"
           />
         </div>
       </div>
@@ -101,6 +107,7 @@ export default function EventForm({ event }: EventFormProps) {
           type="text"
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           defaultValue={event?.location}
+          name="location"
         />
       </div>
 
@@ -109,6 +116,7 @@ export default function EventForm({ event }: EventFormProps) {
         <textarea
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground min-h-30"
           defaultValue={event?.description}
+          name="description"
         />
       </div>
 
