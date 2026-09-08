@@ -1,6 +1,7 @@
 import EventForm from "@/components/EventForm";
 import { events } from "@/data/events";
-import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { notFound, redirect } from "next/navigation";
 
 type EditEventPageProps = {
   params: Promise<{ slug: string }>;
@@ -8,6 +9,12 @@ type EditEventPageProps = {
 
 export default async function EditEventPage({ params }: EditEventPageProps) {
   const { slug } = await params;
+  const { userId } = await auth();
+
+  if (!userId) {
+    redirect("/sign-in");
+  }
+
   const event = events.find((e) => e.slug === slug);
 
   if (!event) {

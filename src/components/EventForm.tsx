@@ -18,8 +18,6 @@ export default function EventForm({ event }: EventFormProps) {
   const buttonTitle = event ? "Guardar cambios" : "Crear evento";
   const formTitle = event ? "Modificar evento" : "Crear evento";
 
-  console.log({ event, formTitle });
-
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
