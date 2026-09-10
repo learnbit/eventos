@@ -12,8 +12,6 @@ export default async function AppPage({ searchParams }: AppPageProps) {
   const { category = "" } = await searchParams;
   const events = await getEvents(category);
 
-  console.log({ events });
-
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-4">
       <CategoryFilter activeCategory={category} />

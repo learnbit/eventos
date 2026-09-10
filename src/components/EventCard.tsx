@@ -17,12 +17,7 @@ export default function EventCard({ event }: EventCardProps) {
     >
       <div className="w-full relative bg-surface-hover rounded-md mb-4 aspect-video overflow-hidden">
         {image ? (
-          <Image
-            className="object-cover"
-            src={image}
-            alt={"event image"}
-            fill
-          />
+          <Image className="object-cover" src={image} alt={title} fill />
         ) : (
           <div className="flex h-full items-center justify-center text-muted">
             Sin imagen
