@@ -1,4 +1,4 @@
-import { Event } from "@/types/event";
+import type { Event } from "@/generated/prisma/client";
 import { formatDate } from "@/utils/date";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,18 @@ export default function EventCard({ event }: EventCardProps) {
       className="bg-surface border border-border rounded-md p-4 w-full space-y-2 hover:bg-surface-hover"
     >
       <div className="w-full relative bg-surface-hover rounded-md mb-4 aspect-video overflow-hidden">
-        <Image className="object-cover" src={image} alt={"event image"} fill />
+        {image ? (
+          <Image
+            className="object-cover"
+            src={image}
+            alt={"event image"}
+            fill
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted">
+            Sin imagen
+          </div>
+        )}
       </div>
       <h2 className="text-lg font-semibold">{title}</h2>
       <p className="text-sm">{category}</p>

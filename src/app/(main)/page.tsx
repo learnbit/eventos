@@ -1,7 +1,6 @@
 import CategoryFilter from "@/components/CategoryFilter";
 import EventCard from "@/components/EventCard";
-import { events } from "@/data/events";
-import { validCategoryOptions } from "@/types/event";
+import { getEvents } from "@/data/events";
 
 type AppPageProps = {
   searchParams: Promise<{
@@ -11,31 +10,16 @@ type AppPageProps = {
 
 export default async function AppPage({ searchParams }: AppPageProps) {
   const { category = "" } = await searchParams;
-  let filteredEvents = [];
+  const events = await getEvents(category);
 
-  if (validCategoryOptions.includes(category)) {
-    filteredEvents = events.filter((event) => {
-      const eventCategory = event.category;
-
-      return eventCategory === category;
-    });
-  } else {
-    filteredEvents = [...events];
-  }
-
-  filteredEvents = filteredEvents.toSorted((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
-
-    return dateA - dateB;
-  });
+  console.log({ events });
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-4">
       <CategoryFilter activeCategory={category} />
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
-        {filteredEvents.map((event) => (
+        {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>

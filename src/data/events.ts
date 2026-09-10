@@ -1,4 +1,18 @@
+import { prisma } from "@/lib/prisma";
 import type { Event } from "@/types/event";
+
+export function getEventBy(slug: string) {
+  return prisma.event.findUnique({ where: { slug } });
+}
+
+export function getEvents(category: string) {
+  return prisma.event.findMany({
+    where: category ? { category } : undefined,
+    orderBy: {
+      date: "asc",
+    },
+  });
+}
 
 export const events: Event[] = [
   {

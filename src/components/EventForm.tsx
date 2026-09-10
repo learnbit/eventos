@@ -5,6 +5,7 @@ import { Event, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import SubmitButton from "./SubmitButton";
 
 type EventFormProps = {
   event?: Event;
@@ -16,7 +17,6 @@ export default function EventForm({ event }: EventFormProps) {
   );
   const { date, time } = getDateAndTime(event?.date);
 
-  const buttonTitle = event ? "Guardar cambios" : "Crear evento";
   const formTitle = event ? "Modificar evento" : "Crear evento";
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
@@ -120,9 +120,10 @@ export default function EventForm({ event }: EventFormProps) {
         />
       </div>
 
-      <button className="w-fit bg-primary hover:bg-primary-hover px-2 py-2 rounded-md font-medium">
-        {buttonTitle}
-      </button>
+      <SubmitButton
+        className="w-fit bg-primary hover:bg-primary-hover px-2 py-2 rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        title={formTitle}
+      />
     </form>
   );
 }

@@ -1,15 +1,33 @@
 "use server";
 
+import { prisma } from "@/lib/prisma";
 import { EventCategory, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
 import { isFile, isString } from "@/utils/validation";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 function isValidCategory(value: unknown): value is EventCategory {
   return value === GARAGE_SALE || value === KERMESSE || value === FERIA;
 }
 
-function createSlug(title: string) {
-  return title.toLowerCase().trim().replace(/\s+/g, "-");
+async function createSlug(title: string) {
+  const baseSlug = title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  let slug = baseSlug;
+  let counter = 2;
+
+  while (await prisma.event.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${counter}`;
+    counter = counter + 1;
+  }
+
+  return slug;
 }
 
 export async function createEvent(formData: FormData) {
@@ -55,15 +73,21 @@ export async function createEvent(formData: FormData) {
     throw new Error("Description is invalid.");
   }
 
+  const eventDate = new Date(`${date}T${time}:00`);
+
   const payload = {
-    slug: createSlug(title),
+    slug: await createSlug(title),
     title,
     category,
-    date: `${date}T${time}:00`,
+    date: eventDate,
     location,
     description,
     userId,
   };
 
-  console.log({ payload, image });
+  const event = await prisma.event.create({
+    data: payload,
+  });
+
+  redirect(`/events/${event.slug}`);
 }

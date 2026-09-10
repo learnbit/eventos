@@ -1,4 +1,4 @@
-import { Show, SignInButton, UserAvatar } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function Header() {
@@ -22,7 +22,7 @@ export default function Header() {
           </Show>
 
           <Show when="signed-in">
-            <UserAvatar />
+            <UserButton />
           </Show>
         </div>
       </div>

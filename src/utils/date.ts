@@ -1,4 +1,6 @@
-export function formatDate(date: string): string {
+export function formatDate(date: Date | string): string {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+
   const formatter = new Intl.DateTimeFormat("es-BO", {
     day: "2-digit",
     month: "short",
@@ -7,7 +9,7 @@ export function formatDate(date: string): string {
     minute: "2-digit",
   });
 
-  return formatter.format(new Date(date));
+  return formatter.format(parsedDate);
 }
 
 export function getDateAndTime(date?: string): {
