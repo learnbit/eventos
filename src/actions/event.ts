@@ -33,7 +33,6 @@ async function createSlug(title: string) {
 export async function createEvent(formData: FormData) {
   const title = formData.get("title");
   const category = formData.get("category");
-  const image = formData.get("image");
   const date = formData.get("date");
   const time = formData.get("time");
   const location = formData.get("location");
@@ -51,10 +50,6 @@ export async function createEvent(formData: FormData) {
 
   if (!isValidCategory(category)) {
     throw new Error("Category is invalid.");
-  }
-
-  if (!isFile(image)) {
-    throw new Error("Image is invalid.");
   }
 
   if (!isString(date)) {
