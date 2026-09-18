@@ -1,5 +1,6 @@
 import { getEventBy } from "@/data/events";
 import { formatDate } from "@/utils/date";
+import { getEventImageUrl } from "@/utils/image";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,6 +18,8 @@ export default async function EventPage({ params }: EventDetailProps) {
     notFound();
   }
 
+  const eventImageUrl = event?.image ? getEventImageUrl(event?.image) : null;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-4">
       <div className="py-4">
@@ -25,10 +28,10 @@ export default async function EventPage({ params }: EventDetailProps) {
         </Link>
       </div>
       <div className="w-full relative aspect-16/7 overflow-hidden rounded-md border border-border bg-surface">
-        {event.image ? (
+        {eventImageUrl ? (
           <Image
             className="object-cover"
-            src={event.image}
+            src={eventImageUrl}
             alt={event.title}
             fill
           />

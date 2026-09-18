@@ -4,8 +4,14 @@ import { createEvent } from "@/actions/event";
 import { Event, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useActionState, useState } from "react";
 import SubmitButton from "./SubmitButton";
+import { getEventImageUrl } from "@/utils/image";
+import {
+  IMAGE_EXTENSION_BY_MIME_TYPE,
+  MAX_IMAGE_SIZE,
+  MAX_IMAGE_SIZE_MB,
+} from "@/constants/image";
 
 type EventFormProps = {
   event?: Event;
@@ -13,9 +19,13 @@ type EventFormProps = {
 
 export default function EventForm({ event }: EventFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(
-    event?.image ?? null
+    event?.image ? getEventImageUrl(event.image) : null
   );
+  const [imageError, setImageError] = useState<string | null>(null);
   const { date, time } = getDateAndTime(event?.date);
+  const [state, formAction] = useActionState(createEvent, {
+    error: null,
+  });
 
   const formTitle = event ? "Modificar evento" : "Crear evento";
 
@@ -26,14 +36,36 @@ export default function EventForm({ event }: EventFormProps) {
       return;
     }
 
+    if (!IMAGE_EXTENSION_BY_MIME_TYPE[file.type]) {
+      setImageError("Solo se permiten imagenes JPG, PNG o WebP.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      setImageError(`La imagen no puede superar los ${MAX_IMAGE_SIZE_MB} MB.`);
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size === 0) {
+      setImageError("El archivo esta vacio.");
+      event.target.value = "";
+      return;
+    }
+
+    setImageError(null);
     const previewUrl = URL.createObjectURL(file);
 
     setImagePreview(previewUrl);
   }
 
   return (
-    <form className="max-w-2xl flex flex-col gap-4" action={createEvent}>
+    <form className="max-w-2xl flex flex-col gap-4" action={formAction}>
       <h1 className="text-2xl font-semibold mb-4">{formTitle}</h1>
+
+      {state.error && <p className="text-sm text-red-500">{state.error}</p>}
+
       <div className="flex flex-col gap-2">
         <label>Titulo</label>
         <input
@@ -41,6 +73,7 @@ export default function EventForm({ event }: EventFormProps) {
           name="title"
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           defaultValue={event?.title}
+          required
         />
       </div>
 
@@ -73,10 +106,11 @@ export default function EventForm({ event }: EventFormProps) {
         <input
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           onChange={handleImageChange}
           name="image"
         />
+        {imageError && <p className="text-sm text-red-500">{imageError}</p>}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">
@@ -87,6 +121,7 @@ export default function EventForm({ event }: EventFormProps) {
             className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
             defaultValue={date}
             name="date"
+            required
           />
         </div>
 
@@ -97,6 +132,7 @@ export default function EventForm({ event }: EventFormProps) {
             className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
             defaultValue={time}
             name="time"
+            required
           />
         </div>
       </div>
@@ -108,6 +144,7 @@ export default function EventForm({ event }: EventFormProps) {
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
           defaultValue={event?.location}
           name="location"
+          required
         />
       </div>
 
@@ -117,6 +154,7 @@ export default function EventForm({ event }: EventFormProps) {
           className="bg-surface border border-border rounded-md px-2 py-1 text-foreground min-h-30"
           defaultValue={event?.description}
           name="description"
+          required
         />
       </div>
 

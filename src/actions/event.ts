@@ -1,8 +1,15 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { EventCategory, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
-import { isFile, isString } from "@/utils/validation";
+import { deleteFileFromS3, uploadFileToS3 } from "@/lib/s3";
+import {
+  CreateEventState,
+  EventCategory,
+  FERIA,
+  GARAGE_SALE,
+  KERMESSE,
+} from "@/types/event";
+import { isString } from "@/utils/validation";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -30,59 +37,83 @@ async function createSlug(title: string) {
   return slug;
 }
 
-export async function createEvent(formData: FormData) {
+export async function createEvent(
+  _prevState: CreateEventState,
+  formData: FormData
+): Promise<CreateEventState> {
   const title = formData.get("title");
   const category = formData.get("category");
   const date = formData.get("date");
   const time = formData.get("time");
   const location = formData.get("location");
   const description = formData.get("description");
+  const image = formData.get("image");
 
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("User needs to be authenticated.");
+    return { error: "User needs to be authenticated." };
   }
 
-  if (!isString(title)) {
-    throw new Error("Title is invalid.");
+  if (!isString(title) || !title.trim()) {
+    return { error: "Title is invalid." };
   }
 
   if (!isValidCategory(category)) {
-    throw new Error("Category is invalid.");
+    return { error: "Category is invalid." };
   }
 
-  if (!isString(date)) {
-    throw new Error("Date is invalid.");
+  if (!isString(date) || !date.trim()) {
+    return { error: "Date is invalid." };
   }
 
-  if (!isString(time)) {
-    throw new Error("Time is invalid.");
+  if (!isString(time) || !time.trim()) {
+    return { error: "Time is invalid." };
   }
 
-  if (!isString(location)) {
-    throw new Error("Location is invalid.");
+  if (!isString(location) || !location.trim()) {
+    return { error: "Location is invalid." };
   }
 
-  if (!isString(description)) {
-    throw new Error("Description is invalid.");
+  if (!isString(description) || !description.trim()) {
+    return { error: "Description is invalid." };
   }
 
-  const eventDate = new Date(`${date}T${time}:00`);
+  let imageKey: string | null = null;
+  let event;
 
-  const payload = {
-    slug: await createSlug(title),
-    title,
-    category,
-    date: eventDate,
-    location,
-    description,
-    userId,
-  };
+  try {
+    if (image instanceof File && image.size > 0) {
+      imageKey = await uploadFileToS3(image);
+    }
 
-  const event = await prisma.event.create({
-    data: payload,
-  });
+    const eventDate = new Date(`${date}T${time}:00`);
+
+    const payload = {
+      slug: await createSlug(title),
+      title,
+      category,
+      date: eventDate,
+      location,
+      description,
+      userId,
+      image: imageKey,
+    };
+
+    event = await prisma.event.create({
+      data: payload,
+    });
+  } catch (e) {
+    if (imageKey) {
+      try {
+        await deleteFileFromS3(imageKey);
+      } catch (cleanupError) {
+        console.error("Failed to delete orphaned S3 image:", cleanupError);
+      }
+    }
+
+    throw e;
+  }
 
   redirect(`/events/${event.slug}`);
 }

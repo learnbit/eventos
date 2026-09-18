@@ -1,5 +1,5 @@
 import EventForm from "@/components/EventForm";
-import { events } from "@/data/events";
+import { getEventBy } from "@/data/events";
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
     redirect("/sign-in");
   }
 
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBy(slug);
 
   if (!event) {
     notFound();

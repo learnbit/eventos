@@ -12,7 +12,7 @@ export function formatDate(date: Date | string): string {
   return formatter.format(parsedDate);
 }
 
-export function getDateAndTime(date?: string): {
+export function getDateAndTime(date?: string | Date): {
   date?: string;
   time?: string;
 } {
