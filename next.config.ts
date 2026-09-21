@@ -1,13 +1,17 @@
 import type { NextConfig } from "next";
 
+const s3BaseUrl = process.env.NEXT_PUBLIC_S3_BASE_URL;
+
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "eventos-cochabamba-images-wilson.s3.us-east-2.amazonaws.com",
-      },
-    ],
+    remotePatterns: s3BaseUrl
+      ? [
+          {
+            protocol: "https",
+            hostname: new URL(s3BaseUrl).hostname,
+          },
+        ]
+      : [],
   },
 };
 

@@ -5,7 +5,10 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { IMAGE_EXTENSION_BY_MIME_TYPE } from "@/constants/image";
+import {
+  IMAGE_EXTENSION_BY_MIME_TYPE,
+  MAX_IMAGE_SIZE,
+} from "@/constants/image";
 
 export const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -35,7 +38,7 @@ export async function uploadFileToS3(file: File) {
     throw new Error("File is empty");
   }
 
-  if (file.size > 5 * 1024 * 1024) {
+  if (file.size > MAX_IMAGE_SIZE) {
     throw new Error("File too large");
   }
 
