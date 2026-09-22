@@ -134,7 +134,7 @@ export async function updateEvent(
       data: payload,
     });
   } catch (e) {
-    if (newImageKey && currentEvent.image) {
+    if (newImageKey) {
       try {
         await deleteFileFromS3(newImageKey);
       } catch (cleanupError) {
@@ -143,6 +143,15 @@ export async function updateEvent(
     }
 
     throw e;
+  }
+
+  // deleting old image that was replaced with the new one
+  if (newImageKey && currentEvent.image) {
+    try {
+      await deleteFileFromS3(currentEvent.image);
+    } catch (cleanupError) {
+      console.error("Failed to delete old S3 image:", cleanupError);
+    }
   }
 
   redirect(`/events/${event.slug}`);
