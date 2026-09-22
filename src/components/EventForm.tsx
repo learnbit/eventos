@@ -1,6 +1,6 @@
 "use client";
 
-import { createEvent } from "@/actions/event";
+import { createEvent, updateEvent } from "@/actions/event";
 import { Event, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
@@ -23,7 +23,10 @@ export default function EventForm({ event }: EventFormProps) {
   );
   const [imageError, setImageError] = useState<string | null>(null);
   const { date, time } = getDateAndTime(event?.date);
-  const [state, formAction] = useActionState(createEvent, {
+
+  const action = event ? updateEvent.bind(null, event.id) : createEvent;
+
+  const [state, formAction] = useActionState(action, {
     error: null,
   });
 
@@ -109,6 +112,7 @@ export default function EventForm({ event }: EventFormProps) {
           accept="image/jpeg,image/png,image/webp"
           onChange={handleImageChange}
           name="image"
+          required={!event}
         />
         {imageError && <p className="text-sm text-red-500">{imageError}</p>}
       </div>

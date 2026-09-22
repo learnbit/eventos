@@ -22,9 +22,16 @@ export default async function EventPage({ params }: EventDetailProps) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-4">
-      <div className="py-4">
+      <div className="py-4 flex items-center justify-between">
         <Link className="text-muted hover:text-foreground" href="/">
           ← Volver a eventos
+        </Link>
+
+        <Link
+          className="text-muted hover:text-foreground"
+          href={`/events/${event.slug}/edit`}
+        >
+          Editar
         </Link>
       </div>
       <div className="w-full relative aspect-16/7 overflow-hidden rounded-md border border-border bg-surface">

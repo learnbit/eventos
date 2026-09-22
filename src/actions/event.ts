@@ -17,7 +17,7 @@ function isValidCategory(value: unknown): value is EventCategory {
   return value === GARAGE_SALE || value === KERMESSE || value === FERIA;
 }
 
-async function createSlug(title: string) {
+async function createSlug(title: string, eventIdToIgnore?: string) {
   const baseSlug = title
     .toLowerCase()
     .normalize("NFD")
@@ -29,12 +29,128 @@ async function createSlug(title: string) {
   let slug = baseSlug;
   let counter = 2;
 
-  while (await prisma.event.findUnique({ where: { slug } })) {
+  while (true) {
+    const existingEvent = await prisma.event.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!existingEvent || existingEvent.id === eventIdToIgnore) {
+      return slug;
+    }
+
     slug = `${baseSlug}-${counter}`;
-    counter = counter + 1;
+    counter++;
+  }
+}
+
+export async function updateEvent(
+  eventId: string,
+  _prevState: CreateEventState,
+  formData: FormData
+): Promise<CreateEventState> {
+  const image = formData.get("image");
+  const title = formData.get("title");
+  const category = formData.get("category");
+  const date = formData.get("date");
+  const time = formData.get("time");
+  const location = formData.get("location");
+  const description = formData.get("description");
+
+  let newImageKey: string | null = null;
+
+  const { userId } = await auth();
+
+  if (!userId) {
+    return { error: "User needs to be authenticated." };
   }
 
-  return slug;
+  const currentEvent = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  });
+
+  if (!currentEvent) {
+    return {
+      error: "Event not found.",
+    };
+  }
+
+  if (currentEvent.userId !== userId) {
+    return {
+      error: "You are not allowed to edit this event.",
+    };
+  }
+
+  if (!isString(title) || !title.trim()) {
+    return { error: "Title is invalid." };
+  }
+
+  if (!isValidCategory(category)) {
+    return { error: "Category is invalid." };
+  }
+
+  if (!isString(date) || !date.trim()) {
+    return { error: "Date is invalid." };
+  }
+
+  if (!isString(time) || !time.trim()) {
+    return { error: "Time is invalid." };
+  }
+
+  if (!isString(location) || !location.trim()) {
+    return { error: "Location is invalid." };
+  }
+
+  if (!isString(description) || !description.trim()) {
+    return { error: "Description is invalid." };
+  }
+
+  let event;
+
+  try {
+    if (image instanceof File && image.size > 0) {
+      newImageKey = await uploadFileToS3(image);
+    }
+
+    const slug = await createSlug(title, eventId);
+
+    const eventDate = new Date(`${date}T${time}:00`);
+
+    const payload = {
+      slug,
+      title,
+      category,
+      date: eventDate,
+      location,
+      description,
+      image: newImageKey ?? currentEvent.image,
+    };
+
+    event = await prisma.event.update({
+      where: {
+        id: eventId,
+      },
+      data: payload,
+    });
+
+    if (newImageKey && currentEvent.image) {
+      await deleteFileFromS3(currentEvent.image);
+    }
+  } catch (e) {
+    if (newImageKey) {
+      try {
+        await deleteFileFromS3(newImageKey);
+      } catch (cleanupError) {
+        console.error("Failed to delete new S3 image:", cleanupError);
+      }
+    }
+
+    throw e;
+  }
+
+  redirect(`/events/${event.slug}`);
 }
 
 export async function createEvent(

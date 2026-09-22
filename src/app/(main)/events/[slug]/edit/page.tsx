@@ -21,6 +21,10 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
     notFound();
   }
 
+  if (event.userId !== userId) {
+    redirect(`/events/${event.slug}`);
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-4">
       <EventForm event={event} />
