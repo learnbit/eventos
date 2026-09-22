@@ -112,7 +112,6 @@ export default function EventForm({ event }: EventFormProps) {
           accept="image/jpeg,image/png,image/webp"
           onChange={handleImageChange}
           name="image"
-          required={!event}
         />
         {imageError && <p className="text-sm text-red-500">{imageError}</p>}
       </div>

@@ -115,7 +115,6 @@ export async function updateEvent(
     }
 
     const slug = await createSlug(title, eventId);
-
     const eventDate = new Date(`${date}T${time}:00`);
 
     const payload = {
@@ -134,12 +133,8 @@ export async function updateEvent(
       },
       data: payload,
     });
-
-    if (newImageKey && currentEvent.image) {
-      await deleteFileFromS3(currentEvent.image);
-    }
   } catch (e) {
-    if (newImageKey) {
+    if (newImageKey && currentEvent.image) {
       try {
         await deleteFileFromS3(newImageKey);
       } catch (cleanupError) {

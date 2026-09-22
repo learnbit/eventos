@@ -1,6 +1,7 @@
 import { getEventBy } from "@/data/events";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +14,7 @@ export default async function EventPage({ params }: EventDetailProps) {
   const { slug } = await params;
 
   const event = await getEventBy(slug);
+  const { userId } = await auth();
 
   if (!event) {
     notFound();
@@ -27,12 +29,14 @@ export default async function EventPage({ params }: EventDetailProps) {
           ← Volver a eventos
         </Link>
 
-        <Link
-          className="text-muted hover:text-foreground"
-          href={`/events/${event.slug}/edit`}
-        >
-          Editar
-        </Link>
+        {userId === event.userId && (
+          <Link
+            className="text-muted hover:text-foreground"
+            href={`/events/${event.slug}/edit`}
+          >
+            Editar
+          </Link>
+        )}
       </div>
       <div className="w-full relative aspect-16/7 overflow-hidden rounded-md border border-border bg-surface">
         {eventImageUrl ? (
