@@ -82,6 +82,16 @@ export async function approveEvent(eventId: string) {
     throw new Error("Unauthorized");
   }
 
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  });
+
+  if (!event || event.status !== "pending") {
+    throw new Error("Event cannot be approved.");
+  }
+
   await prisma.event.update({
     where: {
       id: eventId,

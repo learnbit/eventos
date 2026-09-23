@@ -77,35 +77,16 @@ export default async function EventPage({
       <div className="w-full flex flex-col gap-2 py-4">
         <div className="flex items-center justify-between">
           <p className="text-2xl font-semibold">{event.title}</p>
-          {isAdmin(userId) && (
+          {isAdmin(userId) && event.status === "pending" && (
             <div className="flex gap-2">
-              <form action={approveEvent.bind(null, event.id)}>
-                <button
-                  className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
-                  type="submit"
-                >
-                  Aprobar
-                </button>
-              </form>
+              <ApproveButton eventId={event.id} />
+              <RejectButton eventId={event.id} />
+            </div>
+          )}
 
-              <form
-                className="flex gap-2"
-                action={rejectEvent.bind(null, event.id)}
-              >
-                <input
-                  className="flex-1 border border-border rounded-md bg-background px-3 py-1.5 text-sm"
-                  type="text"
-                  name="reason"
-                  placeholder="Motivo del rechazo"
-                  required
-                />
-                <button
-                  className="border border-border rounded-md px-3 py-1.5 text-sm hover:bg-muted"
-                  type="submit"
-                >
-                  Rechazar
-                </button>
-              </form>
+          {isAdmin(userId) && event.status === "approved" && (
+            <div className="flex gap-2">
+              <RejectButton eventId={event.id} />
             </div>
           )}
         </div>
@@ -116,5 +97,38 @@ export default async function EventPage({
         <p className="mt-2">{event.description}</p>
       </div>
     </div>
+  );
+}
+
+function ApproveButton({ eventId }: { eventId: string }) {
+  return (
+    <form action={approveEvent.bind(null, eventId)}>
+      <button
+        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+        type="submit"
+      >
+        Aprobar
+      </button>
+    </form>
+  );
+}
+
+function RejectButton({ eventId }: { eventId: string }) {
+  return (
+    <form className="flex gap-2" action={rejectEvent.bind(null, eventId)}>
+      <input
+        className="flex-1 border border-border rounded-md bg-background px-3 py-1.5 text-sm"
+        type="text"
+        name="reason"
+        placeholder="Motivo del rechazo"
+        required
+      />
+      <button
+        className="border border-border rounded-md px-3 py-1.5 text-sm hover:bg-muted"
+        type="submit"
+      >
+        Rechazar
+      </button>
+    </form>
   );
 }

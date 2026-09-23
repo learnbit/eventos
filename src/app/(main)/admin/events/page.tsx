@@ -15,7 +15,7 @@ export default async function AdminEventsPage() {
   const events = await getPendingEvents();
 
   return (
-    <div className="w-full max-w-6xl max-auto px-4 py-6">
+    <div className="w-full max-w-6xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-semibold mb-6">Eventos Pendientes</h1>
       <div className="grid gap-4 md:grid-cols-2">
         {events.map((event) => (
@@ -27,7 +27,7 @@ export default async function AdminEventsPage() {
             <h2 className="text-lg font-semibold">{event.title}</h2>
 
             <p className="mt-1 text-sm text-muted">
-              Creado: {formatDate(event.date)}
+              Creado: {formatDate(event.updatedAt)}
             </p>
           </Link>
         ))}
