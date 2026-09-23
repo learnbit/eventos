@@ -3,6 +3,7 @@
 import { isAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteFileFromS3, uploadFileToS3 } from "@/lib/s3";
+import { sendTelegramMessage } from "@/lib/telegram";
 import {
   CreateEventState,
   EventCategory,
@@ -301,6 +302,12 @@ export async function createEvent(
     event = await prisma.event.create({
       data: payload,
     });
+
+    try {
+      await sendTelegramMessage(`Nuevo evento pendiente:\n${event.title}`);
+    } catch (error) {
+      console.error("Failed to send Telegram notification", error);
+    }
   } catch (e) {
     if (imageKey) {
       try {
