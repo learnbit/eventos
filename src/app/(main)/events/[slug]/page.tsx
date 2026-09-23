@@ -1,4 +1,6 @@
+import { approveEvent, rejectEvent } from "@/actions/event";
 import { getEventBy } from "@/data/events";
+import { isAdmin } from "@/lib/auth";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
 import { auth } from "@clerk/nextjs/server";
@@ -8,10 +10,21 @@ import { notFound } from "next/navigation";
 
 type EventDetailProps = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ from?: string }>;
 };
 
-export default async function EventPage({ params }: EventDetailProps) {
+export default async function EventPage({
+  params,
+  searchParams,
+}: EventDetailProps) {
   const { slug } = await params;
+  const { from } = await searchParams;
+  const backHref =
+    from === "admin"
+      ? "/admin/events"
+      : from === "my-events"
+      ? "/my-events"
+      : "/";
 
   const event = await getEventBy(slug);
   const { userId } = await auth();
@@ -20,12 +33,21 @@ export default async function EventPage({ params }: EventDetailProps) {
     notFound();
   }
 
-  const eventImageUrl = event?.image ? getEventImageUrl(event?.image) : null;
+  const canView =
+    (event.status === "approved" && !event.isHidden) ||
+    event.userId === userId ||
+    isAdmin(userId);
+
+  if (!canView) {
+    notFound();
+  }
+
+  const eventImageUrl = event.image ? getEventImageUrl(event?.image) : null;
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-4">
       <div className="py-4 flex items-center justify-between">
-        <Link className="text-muted hover:text-foreground" href="/">
+        <Link className="text-muted hover:text-foreground" href={backHref}>
           ← Volver a eventos
         </Link>
 
@@ -52,8 +74,42 @@ export default async function EventPage({ params }: EventDetailProps) {
           </div>
         )}
       </div>
-      <div className="max-w-2xl flex flex-col gap-2 py-4">
-        <p className="text-2xl font-semibold">{event.title}</p>
+      <div className="w-full flex flex-col gap-2 py-4">
+        <div className="flex items-center justify-between">
+          <p className="text-2xl font-semibold">{event.title}</p>
+          {isAdmin(userId) && (
+            <div className="flex gap-2">
+              <form action={approveEvent.bind(null, event.id)}>
+                <button
+                  className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+                  type="submit"
+                >
+                  Aprobar
+                </button>
+              </form>
+
+              <form
+                className="flex gap-2"
+                action={rejectEvent.bind(null, event.id)}
+              >
+                <input
+                  className="flex-1 border border-border rounded-md bg-background px-3 py-1.5 text-sm"
+                  type="text"
+                  name="reason"
+                  placeholder="Motivo del rechazo"
+                  required
+                />
+                <button
+                  className="border border-border rounded-md px-3 py-1.5 text-sm hover:bg-muted"
+                  type="submit"
+                >
+                  Rechazar
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+
         <p className="text-sm text-muted">{event.category}</p>
         <p className="text-sm text-muted">{formatDate(event.date)}</p>
         <p className="text-sm text-muted">{event.location}</p>

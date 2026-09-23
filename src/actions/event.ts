@@ -1,5 +1,6 @@
 "use server";
 
+import { isAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteFileFromS3, uploadFileToS3 } from "@/lib/s3";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/types/event";
 import { isString } from "@/utils/validation";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 function isValidCategory(value: unknown): value is EventCategory {
@@ -42,6 +44,59 @@ async function createSlug(title: string, eventIdToIgnore?: string) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
+}
+
+export async function rejectEvent(eventId: string, formData: FormData) {
+  const { userId } = await auth();
+
+  if (!isAdmin(userId)) {
+    throw new Error("Unauthorized");
+  }
+  const reason = formData.get("reason");
+
+  if (typeof reason !== "string" || !reason.trim()) {
+    throw new Error("Rejection reason is required");
+  }
+
+  await prisma.event.update({
+    where: {
+      id: eventId,
+    },
+    data: {
+      status: "rejected",
+      rejectionReason: reason.trim(),
+    },
+  });
+
+  revalidatePath("/admin/events");
+  revalidatePath("/my-events");
+  revalidatePath("/");
+
+  redirect("/admin/events");
+}
+
+export async function approveEvent(eventId: string) {
+  const { userId } = await auth();
+
+  if (!isAdmin(userId)) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.event.update({
+    where: {
+      id: eventId,
+    },
+    data: {
+      status: "approved",
+      rejectionReason: null,
+    },
+  });
+
+  revalidatePath("/admin/events");
+  revalidatePath("/my-events");
+  revalidatePath("/");
+
+  redirect("/admin/events");
 }
 
 export async function updateEvent(
@@ -125,6 +180,8 @@ export async function updateEvent(
       location,
       description,
       image: newImageKey ?? currentEvent.image,
+      status: "pending" as const,
+      rejectionReason: null,
     };
 
     event = await prisma.event.update({
@@ -236,4 +293,39 @@ export async function createEvent(
   }
 
   redirect(`/events/${event.slug}`);
+}
+
+export async function setEventHidden(eventId: string, isHidden: boolean) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  });
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  if (event.userId !== userId) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.event.update({
+    where: {
+      id: eventId,
+    },
+    data: {
+      isHidden,
+    },
+  });
+
+  revalidatePath("/my-events");
+  revalidatePath("/");
+  revalidatePath(`/events/${event.slug}`);
 }
