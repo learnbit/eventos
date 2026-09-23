@@ -27,7 +27,7 @@ export default async function AdminEventsPage() {
             <h2 className="text-lg font-semibold">{event.title}</h2>
 
             <p className="mt-1 text-sm text-muted">
-              Creado: {formatDate(event.updatedAt)}
+              Actualizado: {formatDate(event.updatedAt)}
             </p>
           </Link>
         ))}

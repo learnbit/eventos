@@ -52,6 +52,17 @@ export async function rejectEvent(eventId: string, formData: FormData) {
   if (!isAdmin(userId)) {
     throw new Error("Unauthorized");
   }
+
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  });
+
+  if (!event || (event.status !== "approved" && event.status !== "pending")) {
+    throw new Error("Event cannot be rejected.");
+  }
+
   const reason = formData.get("reason");
 
   if (typeof reason !== "string" || !reason.trim()) {
