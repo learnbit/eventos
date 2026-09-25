@@ -1,4 +1,5 @@
 import { setEventHidden } from "@/actions/event";
+import { categoryLabels } from "@/constants/event";
 import { Event } from "@/types/event";
 import { formatDate } from "@/utils/date";
 import Link from "next/link";
@@ -9,48 +10,69 @@ type MyEventCardProps = {
 
 export default function MyEventCard({ event }: MyEventCardProps) {
   return (
-    <div className="relative bg-surface border border-border rounded-md p-4 space-y-2">
-      {event.status === "approved" && (
-        <form
-          className="absolute top-3 right-3"
-          action={setEventHidden.bind(null, event.id, !event.isHidden)}
-        >
-          <button
-            className="text-xs text-muted hover:text-foreground underline"
-            type="submit"
-          >
-            {event.isHidden ? "Mostrar" : "Ocultar"}
-          </button>
-        </form>
-      )}
+    <div className="flex flex-col h-full border border-border rounded-lg bg-surface p-4">
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-primary">
+          {categoryLabels[event.category] ?? event.category}
+        </p>
 
-      <h2 className="text-lg font-semibold pr-20">{event.title}</h2>
-      <p className="text-sm">{event.category}</p>
-      <p className="text-muted">{formatDate(event.date)}</p>
-      <p className="text-sm">
-        Estado:{" "}
+        {event.status === "approved" && (
+          <form action={setEventHidden.bind(null, event.id, !event.isHidden)}>
+            <button
+              className="shrink-0 text-sm text-muted transition-colors hover:text-foreground"
+              type="submit"
+            >
+              {event.isHidden ? "Mostrar" : "Ocultar"}
+            </button>
+          </form>
+        )}
+      </div>
+
+      <h2 className="mt-2 text-lg font-semibold tracking-tight line-clamp-2">
+        {event.title}
+      </h2>
+
+      <p className="mt-4 text-sm text-muted">{formatDate(event.date)}</p>
+
+      <div className="mt-4 flex items-center gap-2">
         <span
-          className={`inline-block rounded-md border border-border px-2 py-1 text-xs ${getStatusBadgeClassName(
+          className={`inline-flex rounded-md border px-2 py-1 text-xs font-medium ${getStatusBadgeClassName(
             event.status
           )}`}
         >
-          {event.status}
+          {getStatusLabel(event.status)}
         </span>
-        {event.isHidden && (
-          <span className="ml-2 text-xs text-muted">Oculto</span>
-        )}
-      </p>
+        {event.isHidden && <span className="text-xs text-muted">Oculto</span>}
+      </div>
+
       {event.status === "rejected" && event.rejectionReason && (
-        <p className="text-sm text-muted">Motivo: {event.rejectionReason}</p>
+        <div className="mt-4 rounded-md border border-red-500/20 bg-red-500/5 p-3">
+          <p className="text-xs font-medium text-red-300">Motivo del rechazo</p>
+          <p className="mt-1 text-sm text-muted">{event.rejectionReason}</p>
+        </div>
       )}
-      <Link
-        href={`/events/${event.slug}/edit`}
-        className="inline-block text-sm underline"
-      >
-        Editar
-      </Link>
+
+      <div className="mt-auto pt-5">
+        <Link
+          href={`/events/${event.slug}/edit`}
+          className="inline-flex rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-surface-hover"
+        >
+          Editar
+        </Link>
+      </div>
     </div>
   );
+}
+
+function getStatusLabel(status: Event["status"]) {
+  switch (status) {
+    case "pending":
+      return "Pendiente";
+    case "approved":
+      return "Aprobado";
+    case "rejected":
+      return "Rechazado";
+  }
 }
 
 function getStatusBadgeClassName(status: Event["status"]) {

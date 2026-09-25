@@ -1,3 +1,4 @@
+import { categoryLabels } from "@/constants/event";
 import { validCategoryOptions } from "@/types/event";
 import Link from "next/link";
 
@@ -10,17 +11,17 @@ export default function CategoryFilter({
 }: CategoryFilterProps) {
   const isAllActive = !activeCategory;
 
-  const activeClass = "bg-primary font-semibold";
+  const activeClass = "bg-primary border-primary font-semibold";
 
   return (
-    <div className="flex gap-4 justify-center">
+    <div className="flex gap-3 flex-wrap">
       <Link
         className={`border border-border rounded-md px-4 py-2 hover:bg-surface-hover  ${
           isAllActive && activeClass
         }`}
         href="/"
       >
-        All
+        Todos
       </Link>
 
       {validCategoryOptions.map((cat) => {
@@ -34,7 +35,7 @@ export default function CategoryFilter({
             key={cat}
             href={`/?category=${cat}`}
           >
-            {cat}
+            {categoryLabels[cat] ?? cat}
           </Link>
         );
       })}

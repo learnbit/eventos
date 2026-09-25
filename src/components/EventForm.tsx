@@ -31,6 +31,8 @@ export default function EventForm({ event }: EventFormProps) {
   });
 
   const formTitle = event ? "Modificar evento" : "Crear evento";
+  const inputClassName =
+    "bg-surface border border-border rounded-md px-3 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors";
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -64,27 +66,33 @@ export default function EventForm({ event }: EventFormProps) {
   }
 
   return (
-    <form className="max-w-2xl flex flex-col gap-4" action={formAction}>
-      <h1 className="text-2xl font-semibold mb-4">{formTitle}</h1>
+    <form className="max-w-2xl flex flex-col gap-5" action={formAction}>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">{formTitle}</h1>
+
+        <p className="mt-2 text-sm text-muted">
+          Completa la informacion del evento.
+        </p>
+      </div>
 
       {state.error && <p className="text-sm text-red-500">{state.error}</p>}
 
       <div className="flex flex-col gap-2">
-        <label>Titulo</label>
+        <label className="text-sm font-medium">Titulo</label>
         <input
           type="text"
           name="title"
-          className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+          className={inputClassName}
           defaultValue={event?.title}
           required
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label>Categoria</label>
+        <label className="text-sm font-medium">Categoria</label>
         <select
           name="category"
-          className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+          className={inputClassName}
           defaultValue={event?.category}
         >
           <option value={GARAGE_SALE}>Venta de Garage</option>
@@ -94,9 +102,9 @@ export default function EventForm({ event }: EventFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label>Imagen</label>
+        <label className="text-sm font-medium">Imagen</label>
         {imagePreview && (
-          <div className="relative w-full aspect-video overflow-hidden rounded-md">
+          <div className="relative w-full aspect-video overflow-hidden rounded-md border border-border">
             <Image
               className="object-cover"
               src={imagePreview}
@@ -107,21 +115,25 @@ export default function EventForm({ event }: EventFormProps) {
         )}
 
         <input
-          className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+          className={inputClassName}
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={handleImageChange}
           name="image"
         />
+
+        <p className="text-xs text-muted">
+          JPG, PNG o WebP. Maximo {MAX_IMAGE_SIZE_MB} MB.
+        </p>
         {imageError && <p className="text-sm text-red-500">{imageError}</p>}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 flex flex-col gap-2">
-          <label>Fecha</label>
+          <label className="text-sm font-medium">Fecha</label>
           <input
             type="date"
-            className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+            className={inputClassName}
             defaultValue={date}
             name="date"
             required
@@ -129,10 +141,10 @@ export default function EventForm({ event }: EventFormProps) {
         </div>
 
         <div className="flex-1 flex flex-col gap-2">
-          <label>Hora</label>
+          <label className="text-sm font-medium">Hora</label>
           <input
             type="time"
-            className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+            className={inputClassName}
             defaultValue={time}
             name="time"
             required
@@ -141,10 +153,10 @@ export default function EventForm({ event }: EventFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label>Ubicacion</label>
+        <label className="text-sm font-medium">Ubicacion</label>
         <input
           type="text"
-          className="bg-surface border border-border rounded-md px-2 py-1 text-foreground"
+          className={inputClassName}
           defaultValue={event?.location}
           name="location"
           required
@@ -152,17 +164,23 @@ export default function EventForm({ event }: EventFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label>Descripcion</label>
+        <label className="text-sm font-medium">Descripcion</label>
         <textarea
-          className="bg-surface border border-border rounded-md px-2 py-1 text-foreground min-h-30"
+          className={`${inputClassName} min-h-36 resize-y`}
           defaultValue={event?.description}
           name="description"
           required
         />
       </div>
 
+      <p className="text-sm text-muted">
+        {event
+          ? "Al guardar cambios, el evento volverá a revisión antes de publicarse."
+          : "El evento quedará pendiente de aprobación antes de publicarse."}
+      </p>
+
       <SubmitButton
-        className="w-fit bg-primary hover:bg-primary-hover px-2 py-2 rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-fit bg-primary hover:bg-primary-hover px-4 py-2.5 rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         title={formTitle}
       />
     </form>

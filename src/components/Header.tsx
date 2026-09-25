@@ -2,32 +2,30 @@ import { isAdmin } from "@/lib/auth";
 import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import NavLink from "./NavLink";
 
 export default async function Header() {
   const { userId } = await auth();
   const admin = isAdmin(userId);
 
   return (
-    <header className="w-full">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="font-semibold">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/85 backdrop-blur">
+      <div className="max-w-7xl mx-auto px-3 py-3 flex justify-between items-center">
+        <div className="flex items-center gap-8">
+          <Link
+            href="/"
+            className="text-lg font-semibold tracking-tight hover:text-primary transition-colors"
+          >
             Eventos
           </Link>
           <Show when="signed-in">
-            <Link href="/events/new" className="text-muted">
-              Crear evento
-            </Link>
+            <nav className="flex items-center gap-6 text-sm">
+              <NavLink href="/events/new">Crear evento</NavLink>
 
-            <Link href="/my-events" className="text-muted">
-              Mis eventos
-            </Link>
+              <NavLink href="/my-events">Mis eventos</NavLink>
 
-            {admin && (
-              <Link href="/admin/events" className="text-muted">
-                Pendientes
-              </Link>
-            )}
+              {admin && <NavLink href="/admin/events">Pendientes</NavLink>}
+            </nav>
           </Show>
         </div>
 

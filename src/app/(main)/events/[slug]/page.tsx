@@ -1,4 +1,5 @@
 import { approveEvent, rejectEvent } from "@/actions/event";
+import { categoryLabels } from "@/constants/event";
 import { getEventBy } from "@/data/events";
 import { isAdmin } from "@/lib/auth";
 import { formatDate } from "@/utils/date";
@@ -45,57 +46,76 @@ export default async function EventPage({
   const eventImageUrl = event.image ? getEventImageUrl(event?.image) : null;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-4">
-      <div className="py-4 flex items-center justify-between">
-        <Link className="text-muted hover:text-foreground" href={backHref}>
-          ← Volver a eventos
+    <div className="w-full max-w-7xl mx-auto px-4 py-6">
+      <div className="mb-6 flex items-center justify-between">
+        <Link
+          className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
+          href={backHref}
+        >
+          <span aria-hidden="true">←</span>
+          Volver
         </Link>
 
         {userId === event.userId && (
           <Link
-            className="text-muted hover:text-foreground"
+            className="text-sm text-muted hover:text-foreground transition-colors"
             href={`/events/${event.slug}/edit`}
           >
             Editar
           </Link>
         )}
       </div>
-      <div className="w-full relative aspect-16/7 overflow-hidden rounded-md border border-border bg-surface">
-        {eventImageUrl ? (
-          <Image
-            className="object-cover"
-            src={eventImageUrl}
-            alt={event.title}
-            fill
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-muted">
-            Sin imagen
-          </div>
-        )}
-      </div>
-      <div className="w-full flex flex-col gap-2 py-4">
-        <div className="flex items-center justify-between">
-          <p className="text-2xl font-semibold">{event.title}</p>
-          {isAdmin(userId) && event.status === "pending" && (
-            <div className="flex gap-2">
-              <ApproveButton eventId={event.id} />
-              <RejectButton eventId={event.id} />
-            </div>
-          )}
-
-          {isAdmin(userId) && event.status === "approved" && (
-            <div className="flex gap-2">
-              <RejectButton eventId={event.id} />
+      <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+        <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-background">
+          {eventImageUrl ? (
+            <Image
+              className="object-cover"
+              src={eventImageUrl}
+              alt={event.title}
+              fill
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm text-muted">
+              Sin imagen
             </div>
           )}
         </div>
 
-        <p className="text-sm text-muted">{event.category}</p>
-        <p className="text-sm text-muted">{formatDate(event.date)}</p>
-        <p className="text-sm text-muted">{event.location}</p>
-        <p className="mt-2">{event.description}</p>
+        <div className="flex flex-col">
+          <p className="text-sm text-primary">
+            {categoryLabels[event.category] ?? event.category}
+          </p>
+
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+            {event.title}
+          </h1>
+
+          <div className="mt-6 space-y-2 text-sm text-muted">
+            <p>{formatDate(event.date)}</p>
+            <p>{event.location}</p>
+          </div>
+        </div>
       </div>
+
+      <div className="mt-6 max-w-3xl">
+        <h2 className="mb-3 text-lg font-semibold">Descripcion</h2>
+        <p className="whitespace-pre-line break-words leading-7 text-foreground">
+          {event.description}
+        </p>
+      </div>
+
+      {isAdmin(userId) &&
+        (event.status === "pending" || event.status === "approved") && (
+          <div className="mt-10 border-t border-border pt-6">
+            <p className="mb-4 text-sm font-medium">Administracion</p>
+            <div className="flex flex-wrap gap-3">
+              {event.status === "pending" && (
+                <ApproveButton eventId={event.id} />
+              )}
+              <RejectButton eventId={event.id} />
+            </div>
+          </div>
+        )}
     </div>
   );
 }
@@ -104,7 +124,7 @@ function ApproveButton({ eventId }: { eventId: string }) {
   return (
     <form action={approveEvent.bind(null, eventId)}>
       <button
-        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-hover"
         type="submit"
       >
         Aprobar
@@ -124,7 +144,7 @@ function RejectButton({ eventId }: { eventId: string }) {
         required
       />
       <button
-        className="border border-border rounded-md px-3 py-1.5 text-sm hover:bg-muted"
+        className="border border-border rounded-md px-3 py-1.5 text-sm hover:bg-surface-hover"
         type="submit"
       >
         Rechazar

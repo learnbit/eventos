@@ -1,3 +1,4 @@
+import { categoryLabels } from "@/constants/event";
 import type { Event } from "@/generated/prisma/client";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
@@ -15,26 +16,34 @@ export default function EventCard({ event }: EventCardProps) {
   return (
     <Link
       href={`/events/${slug}`}
-      className="bg-surface border border-border rounded-md p-4 w-full space-y-2 hover:bg-surface-hover"
+      className="group w-full overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:bg-surface-hover"
     >
-      <div className="w-full relative bg-surface-hover rounded-md mb-4 aspect-video overflow-hidden">
+      <div className="relative aspect-video w-full bg-background overflow-hidden">
         {eventImageUrl ? (
           <Image
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             src={eventImageUrl}
             alt={title}
             fill
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-muted">
+          <div className="flex h-full items-center justify-center text-muted text-sm">
             Sin imagen
           </div>
         )}
       </div>
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <p className="text-sm">{category}</p>
-      <p className="text-muted">{location}</p>
-      <p className="text-muted">{formatDate(date)}</p>
+      <div className="p-4">
+        <p className="mb-1 text-sm text-primary">
+          {categoryLabels[category] ?? category}
+        </p>
+        <h2 className="text-lg font-semibold tracking-tight line-clamp-2">
+          {title}
+        </h2>
+        <div className="mt-4 space-y-1 text-sm text-muted">
+          <p>{formatDate(date)}</p>
+          <p>{location}</p>
+        </div>
+      </div>
     </Link>
   );
 }
