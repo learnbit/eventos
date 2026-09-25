@@ -10,7 +10,7 @@ export default async function NewEventPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4">
+    <div className="w-full max-w-2xl mx-auto px-4 py-4">
       <EventForm />
     </div>
   );

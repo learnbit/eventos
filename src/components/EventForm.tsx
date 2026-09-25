@@ -31,6 +31,7 @@ export default function EventForm({ event }: EventFormProps) {
   });
 
   const formTitle = event ? "Modificar evento" : "Crear evento";
+  const buttonText = event ? "Guardar cambios" : "Enviar a revision";
   const inputClassName =
     "bg-surface border border-border rounded-md px-3 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors";
 
@@ -66,7 +67,7 @@ export default function EventForm({ event }: EventFormProps) {
   }
 
   return (
-    <form className="max-w-2xl flex flex-col gap-5" action={formAction}>
+    <form className="w-full flex flex-col gap-5" action={formAction}>
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{formTitle}</h1>
 
@@ -181,7 +182,7 @@ export default function EventForm({ event }: EventFormProps) {
 
       <SubmitButton
         className="w-fit bg-primary hover:bg-primary-hover px-4 py-2.5 rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        title={formTitle}
+        title={buttonText}
       />
     </form>
   );
