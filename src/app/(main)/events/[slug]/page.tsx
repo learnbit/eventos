@@ -1,11 +1,11 @@
 import { approveEvent, rejectEvent } from "@/actions/event";
+import EventImage from "@/components/EventImage";
 import { categoryLabels } from "@/constants/event";
 import { getEventBy } from "@/data/events";
 import { isAdmin } from "@/lib/auth";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
 import { auth } from "@clerk/nextjs/server";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -66,17 +66,14 @@ export default async function EventPage({
         )}
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-        <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-background">
+        <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
           {eventImageUrl ? (
-            <Image
-              className="object-cover"
-              src={eventImageUrl}
-              alt={event.title}
-              fill
-            />
+            <EventImage src={eventImageUrl} alt={event.title} />
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-muted">
-              Sin imagen
+            <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
+              <div className="flex h-full items-center justify-center text-sm text-muted">
+                Sin imagen
+              </div>
             </div>
           )}
         </div>
