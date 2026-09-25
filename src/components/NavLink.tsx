@@ -16,9 +16,7 @@ export default function NavLink({ href, children }: NavlLinkProps) {
     <Link
       href={href}
       className={`relative text-sm transition-colors ${
-        isActive
-          ? "text-foreground border-primary"
-          : "text-muted border-transparent hover:text-foreground"
+        isActive ? "text-foreground" : "text-muted hover:text-foreground"
       }`}
     >
       {children}
