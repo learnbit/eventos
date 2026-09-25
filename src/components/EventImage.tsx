@@ -23,15 +23,19 @@ export default function EventImage({ src, alt }: EventImageProps) {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4">
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
+          onClick={() => setOpen(false)}
+        >
           <div
             className="relative h-[90vh] w-full max-w-5xl"
-            onClick={(event) => event.stopPropagation}
+            onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               className="absolute right-2 top-2 z-10 h-10 flex w-10 cursor-pointer items-center justify-center rounded-full border-white/20 bg-white/15 text-xl text-white transition-colors backdrop-blur-sm hover:bg-white/25"
               onClick={() => setOpen(false)}
+              aria-label="Cerrar imagen"
             >
               ×
             </button>

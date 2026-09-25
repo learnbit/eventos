@@ -66,17 +66,15 @@ export default async function EventPage({
         )}
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-        <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
-          {eventImageUrl ? (
-            <EventImage src={eventImageUrl} alt={event.title} />
-          ) : (
-            <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
-              <div className="flex h-full items-center justify-center text-sm text-muted">
-                Sin imagen
-              </div>
+        {eventImageUrl ? (
+          <EventImage src={eventImageUrl} alt={event.title} />
+        ) : (
+          <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
+            <div className="flex h-full items-center justify-center text-sm text-muted">
+              Sin imagen
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="flex flex-col">
           <p className="text-sm text-primary">
