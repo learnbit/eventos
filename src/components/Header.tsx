@@ -3,6 +3,7 @@ import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import NavLink from "./NavLink";
+import MobileNav from "./MobileNav";
 
 export default async function Header() {
   const { userId } = await auth();
@@ -19,7 +20,7 @@ export default async function Header() {
             Eventos
           </Link>
           <Show when="signed-in">
-            <nav className="flex items-center gap-6 text-sm">
+            <nav className="hidden sm:flex items-center gap-6 text-sm">
               <NavLink href="/events/new">Crear evento</NavLink>
 
               <NavLink href="/my-events">Mis eventos</NavLink>
@@ -29,7 +30,11 @@ export default async function Header() {
           </Show>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
+          <Show when="signed-in">
+            <MobileNav isAdmin={admin} />
+          </Show>
+
           <Show when="signed-out">
             <SignInButton />
           </Show>
