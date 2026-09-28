@@ -13,11 +13,11 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
         <p className="text-sm text-primary">Error</p>
 
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-          Algo salio mal
+          Algo salió mal
         </h1>
 
         <p className="mt-3 text-muted">
-          No pudimos cargar esta pagina. Intenta nuevamente.
+          No pudimos cargar esta página. Intenta nuevamente.
         </p>
 
         <div className="mt-6 flex gap-3">

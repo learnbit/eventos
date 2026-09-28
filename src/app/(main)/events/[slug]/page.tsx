@@ -93,7 +93,7 @@ export default async function EventPage({
       </div>
 
       <div className="mt-6 max-w-3xl">
-        <h2 className="mb-3 text-lg font-semibold">Descripcion</h2>
+        <h2 className="mb-3 text-lg font-semibold">Descripción</h2>
         <p className="whitespace-pre-line break-words leading-7 text-foreground">
           {event.description}
         </p>
@@ -102,7 +102,7 @@ export default async function EventPage({
       {isAdmin(userId) &&
         (event.status === "pending" || event.status === "approved") && (
           <div className="mt-10 border-t border-border pt-6">
-            <p className="mb-4 text-sm font-medium">Administracion</p>
+            <p className="mb-4 text-sm font-medium">Administración</p>
             <div className="flex flex-wrap gap-3">
               {event.status === "pending" && (
                 <ApproveButton eventId={event.id} />

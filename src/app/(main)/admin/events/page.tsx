@@ -21,7 +21,7 @@ export default async function AdminEventsPage() {
           Eventos Pendientes
         </h1>
         <p className="mt-2 text-sm text-muted">
-          Revisa los eventos que esperan aprobacion
+          Revisa los eventos que esperan aprobación
         </p>
       </div>
       {events.length === 0 ? (

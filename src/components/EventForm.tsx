@@ -96,7 +96,7 @@ export default function EventForm({ event }: EventFormProps) {
           className={inputClassName}
           defaultValue={event?.category}
         >
-          <option value={GARAGE_SALE}>Venta de Garage</option>
+          <option value={GARAGE_SALE}>Venta de garaje</option>
           <option value={KERMESSE}>Kermesse</option>
           <option value={FERIA}>Feria</option>
         </select>

@@ -17,7 +17,7 @@ export default function MobileNav({ isAdmin }: MobileNavProps) {
         className="text-sm text-muted hover:text-foreground"
         onClick={() => setIsOpen((open) => !open)}
       >
-        Menu
+        Menú
       </button>
 
       {isOpen && (
