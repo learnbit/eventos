@@ -16,7 +16,7 @@ export default function CategoryFilter({
   return (
     <div className="flex gap-3 flex-wrap">
       <Link
-        className={`border border-border rounded-md px-4 py-2 hover:bg-surface-hover  ${
+        className={`border border-border rounded-md px-4 py-2 hover:bg-surface-hover ${
           isAllActive && activeClass
         }`}
         href="/"

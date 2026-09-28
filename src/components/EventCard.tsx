@@ -18,7 +18,7 @@ export default function EventCard({ event }: EventCardProps) {
       href={`/events/${slug}`}
       className="group w-full overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:bg-surface-hover"
     >
-      <div className="relative aspect-video w-full bg-background overflow-hidden">
+      <div className="relative sm:aspect-video aspect-4/3 w-full bg-background overflow-hidden">
         {eventImageUrl ? (
           <Image
             className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
@@ -32,14 +32,14 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
         )}
       </div>
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <p className="mb-1 text-sm text-primary">
           {categoryLabels[category] ?? category}
         </p>
         <h2 className="text-lg font-semibold tracking-tight line-clamp-2">
           {title}
         </h2>
-        <div className="mt-4 space-y-1 text-sm text-muted">
+        <div className="mt-3 sm:mt-4 space-y-1 text-sm text-muted">
           <p>{formatDate(date)}</p>
           <p>{location}</p>
         </div>

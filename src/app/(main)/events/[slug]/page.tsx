@@ -81,7 +81,7 @@ export default async function EventPage({
             {categoryLabels[event.category] ?? event.category}
           </p>
 
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+          <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
             {event.title}
           </h1>
 
@@ -130,9 +130,12 @@ function ApproveButton({ eventId }: { eventId: string }) {
 
 function RejectButton({ eventId }: { eventId: string }) {
   return (
-    <form className="flex gap-2" action={rejectEvent.bind(null, eventId)}>
+    <form
+      className="flex flex-col sm:flex-row gap-2"
+      action={rejectEvent.bind(null, eventId)}
+    >
       <input
-        className="flex-1 border border-border rounded-md bg-background px-3 py-1.5 text-sm"
+        className="w-full sm:flex-1 border border-border rounded-md bg-background px-3 py-1.5 text-sm"
         type="text"
         name="reason"
         placeholder="Motivo del rechazo"

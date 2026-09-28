@@ -11,7 +11,7 @@ type MyEventCardProps = {
 export default function MyEventCard({ event }: MyEventCardProps) {
   return (
     <div className="flex flex-col h-full border border-border rounded-lg bg-surface p-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-start justify-between gap-4">
         <p className="text-sm text-primary">
           {categoryLabels[event.category] ?? event.category}
         </p>
