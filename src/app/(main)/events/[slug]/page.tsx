@@ -6,6 +6,7 @@ import { isAdmin } from "@/lib/auth";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
 import { auth } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -13,6 +14,37 @@ type EventDetailProps = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ from?: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: EventDetailProps): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getEventBy(slug);
+
+  if (!event) {
+    return {
+      title: "Evento no encontrado.",
+    };
+  }
+
+  const eventDescription =
+    event.description.length > 160
+      ? `${event.description.slice(0, 157)}`
+      : event.description;
+
+  const imageUrl = event.image ? getEventImageUrl(event.image) : undefined;
+
+  return {
+    title: event.title,
+    description: eventDescription,
+    openGraph: {
+      title: event.title,
+      description: eventDescription,
+      type: "article",
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+  };
+}
 
 export default async function EventPage({
   params,
