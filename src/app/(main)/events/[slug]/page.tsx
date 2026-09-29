@@ -6,7 +6,7 @@ import { isAdmin } from "@/lib/auth";
 import { formatDate } from "@/utils/date";
 import { getEventImageUrl } from "@/utils/image";
 import { auth } from "@clerk/nextjs/server";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -29,7 +29,7 @@ export async function generateMetadata({
 
   const eventDescription =
     event.description.length > 160
-      ? `${event.description.slice(0, 157)}`
+      ? `${event.description.slice(0, 157)}...`
       : event.description;
 
   const imageUrl = event.image ? getEventImageUrl(event.image) : undefined;
