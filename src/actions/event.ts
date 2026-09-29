@@ -10,6 +10,7 @@ import {
   FERIA,
   GARAGE_SALE,
   KERMESSE,
+  MEETUP,
 } from "@/types/event";
 import { isString } from "@/utils/validation";
 import { auth } from "@clerk/nextjs/server";
@@ -17,7 +18,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 function isValidCategory(value: unknown): value is EventCategory {
-  return value === GARAGE_SALE || value === KERMESSE || value === FERIA;
+  return (
+    value === GARAGE_SALE ||
+    value === KERMESSE ||
+    value === FERIA ||
+    value === MEETUP
+  );
 }
 
 async function createSlug(title: string, eventIdToIgnore?: string) {

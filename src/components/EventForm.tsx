@@ -1,7 +1,7 @@
 "use client";
 
 import { createEvent, updateEvent } from "@/actions/event";
-import { Event, FERIA, GARAGE_SALE, KERMESSE } from "@/types/event";
+import { Event, FERIA, GARAGE_SALE, KERMESSE, MEETUP } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
 import { ChangeEvent, useActionState, useState } from "react";
@@ -99,6 +99,7 @@ export default function EventForm({ event }: EventFormProps) {
           <option value={GARAGE_SALE}>Venta de garaje</option>
           <option value={KERMESSE}>Kermesse</option>
           <option value={FERIA}>Feria</option>
+          <option value={MEETUP}>Charla</option>
         </select>
       </div>
 
