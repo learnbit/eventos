@@ -7,9 +7,10 @@ import Link from "next/link";
 
 type EventCardProps = {
   event: Event;
+  eager?: boolean;
 };
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, eager = false }: EventCardProps) {
   const { title, category, location, date, slug, image } = event;
   const eventImageUrl = image ? getEventImageUrl(image) : null;
 
@@ -24,6 +25,8 @@ export default function EventCard({ event }: EventCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             src={eventImageUrl}
             alt={title}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading={eager ? "eager" : "lazy"}
             fill
           />
         ) : (
