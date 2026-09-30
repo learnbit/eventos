@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { approveEvent, createEvent, rejectEvent, updateEvent } from "./event";
 
 const {
@@ -61,6 +61,10 @@ vi.mock("next/cache", () => ({
 vi.mock("@/lib/telegram", () => ({
   sendTelegramMessage: vi.fn(),
 }));
+
+beforeEach(() => {
+  vi.resetAllMocks();
+});
 
 describe("updateEvent", () => {
   it("returns an error when the user is not authenticated", async () => {
@@ -342,7 +346,7 @@ describe("rejectEvent", () => {
       userId: "admin-1",
     });
 
-    isAdminMock.mockReturnValue(true);
+    isAdminMock.mockResolvedValue(true);
 
     findUniqueMock.mockResolvedValue({
       id: "event-1",
