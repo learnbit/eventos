@@ -335,6 +335,7 @@ describe("approveEvent", () => {
       data: {
         status: "approved",
         rejectionReason: null,
+        isHidden: false,
       },
     });
   });

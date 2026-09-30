@@ -91,6 +91,7 @@ export async function approveEvent(eventId: string) {
     data: {
       status: "approved",
       rejectionReason: null,
+      isHidden: false,
     },
   });
 
