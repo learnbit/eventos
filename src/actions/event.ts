@@ -1,6 +1,7 @@
 "use server";
 
 import { isAdmin } from "@/lib/auth";
+import { createSlug } from "@/lib/event";
 import { prisma } from "@/lib/prisma";
 import { deleteFileFromS3, uploadFileToS3 } from "@/lib/s3";
 import { sendTelegramMessage } from "@/lib/telegram";
@@ -24,33 +25,6 @@ function isValidCategory(value: unknown): value is EventCategory {
     value === FERIA ||
     value === MEETUP
   );
-}
-
-async function createSlug(title: string, eventIdToIgnore?: string) {
-  const baseSlug = title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  let slug = baseSlug;
-  let counter = 2;
-
-  while (true) {
-    const existingEvent = await prisma.event.findUnique({
-      where: { slug },
-      select: { id: true },
-    });
-
-    if (!existingEvent || existingEvent.id === eventIdToIgnore) {
-      return slug;
-    }
-
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
 }
 
 export async function rejectEvent(eventId: string, formData: FormData) {
