@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { esES } from "@clerk/localizations";
+import { dark } from "@clerk/ui/themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider
+          localization={esES}
+          appearance={{
+            theme: dark,
+            variables: {
+              colorPrimary: "#ef5b5b",
+            },
+          }}
+        >
+          {children}
+        </ClerkProvider>
         <Analytics />
       </body>
     </html>
