@@ -319,7 +319,7 @@ describe("approveEvent", () => {
       userId: "admin-1",
     });
 
-    isAdminMock.mockResolvedValue(true);
+    isAdminMock.mockReturnValue(true);
 
     findUniqueMock.mockResolvedValue({
       id: "event-1",
@@ -346,7 +346,7 @@ describe("rejectEvent", () => {
       userId: "admin-1",
     });
 
-    isAdminMock.mockResolvedValue(true);
+    isAdminMock.mockReturnValue(true);
 
     findUniqueMock.mockResolvedValue({
       id: "event-1",
