@@ -114,6 +114,18 @@ export async function updateEvent(
   const time = formData.get("time");
   const location = formData.get("location");
   const description = formData.get("description");
+  const latitudeValue = formData.get("latitude");
+  const longitudeValue = formData.get("longitude");
+
+  const latitude =
+    typeof latitudeValue === "string" && latitudeValue.trim()
+      ? Number(latitudeValue)
+      : null;
+
+  const longitude =
+    typeof longitudeValue === "string" && longitudeValue.trim()
+      ? Number(longitudeValue)
+      : null;
 
   let newImageKey: string | null = null;
 
@@ -163,6 +175,22 @@ export async function updateEvent(
 
   if (!isString(description) || !description.trim()) {
     return { error: "Description is invalid." };
+  }
+
+  if (latitude !== null && !Number.isFinite(latitude)) {
+    return { error: "Invalid latitude." };
+  }
+
+  if (longitude !== null && !Number.isFinite(longitude)) {
+    return { error: "Invalid longitude." };
+  }
+
+  if (latitude !== null && (latitude < -90 || latitude > 90)) {
+    return { error: "Invalid latitude." };
+  }
+
+  if (longitude !== null && (longitude < -180 || longitude > 180)) {
+    return { error: "Invalid longitude." };
   }
 
   let event;
@@ -228,6 +256,18 @@ export async function createEvent(
   const location = formData.get("location");
   const description = formData.get("description");
   const image = formData.get("image");
+  const latitudeValue = formData.get("latitude");
+  const longitudeValue = formData.get("longitude");
+
+  const latitude =
+    typeof latitudeValue === "string" && latitudeValue.trim()
+      ? Number(latitudeValue)
+      : null;
+
+  const longitude =
+    typeof longitudeValue === "string" && longitudeValue.trim()
+      ? Number(longitudeValue)
+      : null;
 
   const { userId } = await auth();
 
@@ -257,6 +297,22 @@ export async function createEvent(
 
   if (!isString(description) || !description.trim()) {
     return { error: "Description is invalid." };
+  }
+
+  if (latitude !== null && !Number.isFinite(latitude)) {
+    return { error: "Invalid latitude." };
+  }
+
+  if (longitude !== null && !Number.isFinite(longitude)) {
+    return { error: "Invalid longitude." };
+  }
+
+  if (latitude !== null && (latitude < -90 || latitude > 90)) {
+    return { error: "Invalid latitude." };
+  }
+
+  if (longitude !== null && (longitude < -180 || longitude > 180)) {
+    return { error: "Invalid longitude." };
   }
 
   let imageKey: string | null = null;

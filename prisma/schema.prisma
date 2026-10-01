@@ -24,6 +24,8 @@ model Event {
   category        String
   date            DateTime
   location        String
+  latitude        Float?
+  longitude       Float?
   description     String
   userId          String
   image           String?
