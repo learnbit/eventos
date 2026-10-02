@@ -65,16 +65,20 @@ export default function LocationMap({
         const latitude = event.latLng.lat();
         const longitude = event.latLng.lng();
 
-        const { results } = await geocoder.geocode({
-          location: {
-            lat: latitude,
-            lng: longitude,
-          },
-        });
+        try {
+          const { results } = await geocoder.geocode({
+            location: {
+              lat: latitude,
+              lng: longitude,
+            },
+          });
 
-        const location = results[0]?.formatted_address ?? "";
+          const location = results[0]?.formatted_address ?? "";
 
-        onLocationChange(latitude, longitude, location);
+          onLocationChange(latitude, longitude, location);
+        } catch (error) {
+          console.error("Failed to reverse geocode location:", error);
+        }
       });
     }
 
