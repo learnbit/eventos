@@ -4,7 +4,7 @@ import { createEvent, updateEvent } from "@/actions/event";
 import { Event, FERIA, GARAGE_SALE, KERMESSE, MEETUP } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
-import { ChangeEvent, useActionState, useState } from "react";
+import { ChangeEvent, useActionState, useCallback, useState } from "react";
 import SubmitButton from "./SubmitButton";
 import { getEventImageUrl } from "@/utils/image";
 import {
@@ -12,12 +12,24 @@ import {
   MAX_IMAGE_SIZE,
   MAX_IMAGE_SIZE_MB,
 } from "@/constants/image";
+import LocationPicker from "./LocationPicker";
+import LocationMap from "./LocationMap";
 
 type EventFormProps = {
   event?: Event;
 };
 
 export default function EventForm({ event }: EventFormProps) {
+  const [recenterKey, setRecenterKey] = useState(0);
+
+  const [latitude, setLatitude] = useState<number | null>(
+    event?.latitude ?? null
+  );
+  const [longitude, setLongitude] = useState<number | null>(
+    event?.longitude ?? null
+  );
+  const [location, setLocation] = useState(event?.location ?? "");
+
   const [imagePreview, setImagePreview] = useState<string | null>(
     event?.image ? getEventImageUrl(event.image) : null
   );
@@ -34,6 +46,16 @@ export default function EventForm({ event }: EventFormProps) {
   const buttonText = event ? "Guardar cambios" : "Enviar a revision";
   const inputClassName =
     "bg-surface border border-border rounded-md px-3 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors";
+
+  const handlePlaceSelect = useCallback(
+    (place: { location: string; latitude: number; longitude: number }) => {
+      setLocation(place.location);
+      setLatitude(place.latitude);
+      setLongitude(place.longitude);
+      setRecenterKey((value) => value + 1);
+    },
+    []
+  );
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -65,6 +87,15 @@ export default function EventForm({ event }: EventFormProps) {
 
     setImagePreview(previewUrl);
   }
+
+  const handleLocationChange = useCallback(
+    (latitude: number, longitude: number, location: string) => {
+      setLatitude(latitude);
+      setLongitude(longitude);
+      setLocation(location);
+    },
+    []
+  );
 
   return (
     <form className="w-full flex flex-col gap-5" action={formAction}>
@@ -157,12 +188,28 @@ export default function EventForm({ event }: EventFormProps) {
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Ubicacion</label>
         <input
-          type="text"
+          type="hidden"
           className={inputClassName}
-          defaultValue={event?.location}
+          value={location}
           name="location"
           required
         />
+        <LocationPicker
+          defaultValue={location}
+          onPlaceSelect={handlePlaceSelect}
+        />
+
+        {latitude !== null && longitude !== null && (
+          <LocationMap
+            latitude={latitude}
+            longitude={longitude}
+            onLocationChange={handleLocationChange}
+            recenterKey={recenterKey}
+          />
+        )}
+
+        <input type="hidden" name="latitude" value={latitude ?? ""} />
+        <input type="hidden" name="longitude" value={longitude ?? ""} />
       </div>
 
       <div className="flex flex-col gap-2">
