@@ -78,6 +78,8 @@ export default function LocationMap({
           onLocationChange(latitude, longitude, location);
         } catch (error) {
           console.error("Failed to reverse geocode location:", error);
+
+          onLocationChange(latitude, longitude, "");
         }
       });
     }
