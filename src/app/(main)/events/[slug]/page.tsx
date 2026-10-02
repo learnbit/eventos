@@ -1,5 +1,6 @@
 import { approveEvent, rejectEvent } from "@/actions/event";
 import EventImage from "@/components/EventImage";
+import EventLocationMap from "@/components/EventLocationMap";
 import { categoryLabels } from "@/constants/event";
 import { getEventBy } from "@/data/events";
 import { isAdmin } from "@/lib/auth";
@@ -120,6 +121,14 @@ export default async function EventPage({
           <div className="mt-6 space-y-2 text-sm text-muted">
             <p>{formatDate(event.date)}</p>
             <p>{event.location}</p>
+            {event.latitude != null && event.longitude != null && (
+              <div className="mt-6">
+                <EventLocationMap
+                  latitude={event.latitude}
+                  longitude={event.longitude}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export default function EventImage({ src, alt }: EventImageProps) {
     <>
       <button
         type="button"
-        className="relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface cursor-pointer"
+        className="relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface cursor-pointer lg:aspect-auto lg:self-stretch"
         aria-label="Ampliar imagen"
         onClick={() => setOpen(true)}
       >
