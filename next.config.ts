@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const s3BaseUrl = process.env.NEXT_PUBLIC_S3_BASE_URL;
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["192.168.0.58"],
   images: {
     remotePatterns: s3BaseUrl
       ? [
