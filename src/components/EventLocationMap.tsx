@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
+import { importLibrary } from "@googlemaps/js-api-loader";
+import { configureGoogleMaps } from "@/lib/googleMaps";
 
 type EventLocationMapProps = {
   latitude: number;
   longitude: number;
 };
-
-let loaderConfigured = false;
 
 export default function EventLocationMap({
   latitude,
@@ -22,14 +21,7 @@ export default function EventLocationMap({
     }
 
     async function initMap() {
-      if (!loaderConfigured) {
-        setOptions({
-          key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-          v: "weekly",
-        });
-
-        loaderConfigured = true;
-      }
+      configureGoogleMaps();
 
       const { Map } = await importLibrary("maps");
       const { AdvancedMarkerElement } = await importLibrary("marker");

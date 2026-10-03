@@ -1,4 +1,5 @@
-import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
+import { configureGoogleMaps } from "@/lib/googleMaps";
+import { importLibrary } from "@googlemaps/js-api-loader";
 import { useEffect, useRef } from "react";
 
 type LocationPickerProps = {
@@ -19,19 +20,15 @@ export default function LocationPicker({
     useRef<google.maps.places.PlaceAutocompleteElement | null>(null);
 
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     const container = containerRef.current;
 
-    if (!apiKey || !containerRef.current) {
+    if (!container) {
       return;
     }
 
     let cancelled = false;
 
-    setOptions({
-      key: apiKey,
-      v: "weekly",
-    });
+    configureGoogleMaps();
 
     async function initAutocomplete() {
       const { PlaceAutocompleteElement } = await importLibrary("places");
