@@ -1,5 +1,3 @@
-// src/lib/googleMaps.ts
-
 import { setOptions } from "@googlemaps/js-api-loader";
 
 let configured = false;

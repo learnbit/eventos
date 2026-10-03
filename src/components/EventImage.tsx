@@ -6,16 +6,23 @@ import { useState } from "react";
 type EventImageProps = {
   src: string;
   alt: string;
+  stretchOnDesktop?: boolean;
 };
 
-export default function EventImage({ src, alt }: EventImageProps) {
+export default function EventImage({
+  src,
+  alt,
+  stretchOnDesktop = false,
+}: EventImageProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <button
         type="button"
-        className="relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface cursor-pointer lg:aspect-auto lg:self-stretch"
+        className={`relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface cursor-pointer ${
+          stretchOnDesktop ? "lg:aspect-auto lg:self-stretch" : ""
+        }`}
         aria-label="Ampliar imagen"
         onClick={() => setOpen(true)}
       >

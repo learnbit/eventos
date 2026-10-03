@@ -77,6 +77,7 @@ export default async function EventPage({
   }
 
   const eventImageUrl = event.image ? getEventImageUrl(event?.image) : null;
+  const hasLocation = event.latitude != null && event.longitude != null;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6">
@@ -100,7 +101,11 @@ export default async function EventPage({
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
         {eventImageUrl ? (
-          <EventImage src={eventImageUrl} alt={event.title} />
+          <EventImage
+            src={eventImageUrl}
+            alt={event.title}
+            stretchOnDesktop={hasLocation}
+          />
         ) : (
           <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
             <div className="flex h-full items-center justify-center text-sm text-muted">
