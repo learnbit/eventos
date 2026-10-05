@@ -335,8 +335,6 @@ export async function createEvent(
       latitude,
       longitude,
       location,
-      latitude,
-      longitude,
       description,
       userId,
       image: imageKey,
