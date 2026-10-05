@@ -24,13 +24,19 @@ export default async function AppPage({ searchParams }: AppPageProps) {
         </p>
       </div>
 
-      <CategoryFilter activeCategory={category} />
+      <CategoryFilter key={category || "all"} activeCategory={category} />
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
-        {events.map((event, index) => (
-          <EventCard key={event.id} event={event} eager={index < 3} />
-        ))}
-      </div>
+      {events.length === 0 ? (
+        <div className="mt-10 text-center text-muted">
+          <p>No hay eventos próximos en esta categoría.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
+          {events.map((event, index) => (
+            <EventCard key={event.id} event={event} eager={index < 3} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
