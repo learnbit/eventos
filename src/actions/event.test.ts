@@ -77,7 +77,7 @@ describe("updateEvent", () => {
     const result = await updateEvent("event-1", { error: null }, formData);
 
     expect(result).toEqual({
-      error: "User needs to be authenticated.",
+      error: "Debes iniciar sesión.",
     });
   });
 
@@ -109,7 +109,7 @@ describe("updateEvent", () => {
     const result = await updateEvent("event-1", { error: null }, formData);
 
     expect(result).toEqual({
-      error: "You are not allowed to edit this event.",
+      error: "No tienes permiso para editar este evento.",
     });
   });
 
@@ -250,7 +250,7 @@ describe("createEvent", () => {
     const result = await createEvent({ error: null }, formData);
 
     expect(result).toEqual({
-      error: "User needs to be authenticated.",
+      error: "Debes iniciar sesión.",
     });
   });
 
@@ -270,7 +270,7 @@ describe("createEvent", () => {
     const result = await createEvent({ error: null }, formData);
 
     expect(result).toEqual({
-      error: "Category is invalid.",
+      error: "La categoría no es válida.",
     });
   });
 

@@ -31,7 +31,7 @@ export async function rejectEvent(eventId: string, formData: FormData) {
   const { userId } = await auth();
 
   if (!isAdmin(userId)) {
-    throw new Error("Unauthorized");
+    throw new Error("No autorizado.");
   }
 
   const event = await prisma.event.findUnique({
@@ -47,7 +47,7 @@ export async function rejectEvent(eventId: string, formData: FormData) {
   const reason = formData.get("reason");
 
   if (typeof reason !== "string" || !reason.trim()) {
-    throw new Error("Rejection reason is required");
+    throw new Error("El motivo del rechazo es obligatorio.");
   }
 
   await prisma.event.update({
@@ -71,7 +71,7 @@ export async function approveEvent(eventId: string) {
   const { userId } = await auth();
 
   if (!isAdmin(userId)) {
-    throw new Error("Unauthorized");
+    throw new Error("No autorizado.");
   }
 
   const event = await prisma.event.findUnique({
@@ -81,7 +81,7 @@ export async function approveEvent(eventId: string) {
   });
 
   if (!event || event.status !== "pending") {
-    throw new Error("Event cannot be approved.");
+    throw new Error("El evento no puede ser aprobado.");
   }
 
   await prisma.event.update({
@@ -132,7 +132,7 @@ export async function updateEvent(
   const { userId } = await auth();
 
   if (!userId) {
-    return { error: "User needs to be authenticated." };
+    return { error: "Debes iniciar sesión." };
   }
 
   const currentEvent = await prisma.event.findUnique({
@@ -149,48 +149,48 @@ export async function updateEvent(
 
   if (currentEvent.userId !== userId) {
     return {
-      error: "You are not allowed to edit this event.",
+      error: "No tienes permiso para editar este evento.",
     };
   }
 
   if (!isString(title) || !title.trim()) {
-    return { error: "Title is invalid." };
+    return { error: "El título no es válido." };
   }
 
   if (!isValidCategory(category)) {
-    return { error: "Category is invalid." };
+    return { error: "La categoría no es válida." };
   }
 
   if (!isString(date) || !date.trim()) {
-    return { error: "Date is invalid." };
+    return { error: "La fecha no es válida." };
   }
 
   if (!isString(time) || !time.trim()) {
-    return { error: "Time is invalid." };
+    return { error: "La hora no es válida." };
   }
 
   if (!isString(location) || !location.trim()) {
-    return { error: "Location is invalid." };
+    return { error: "La ubicación no es válida." };
   }
 
   if (!isString(description) || !description.trim()) {
-    return { error: "Description is invalid." };
+    return { error: "La descripción no es válida." };
   }
 
   if (latitude !== null && !Number.isFinite(latitude)) {
-    return { error: "Invalid latitude." };
+    return { error: "La latitud no es válida." };
   }
 
   if (longitude !== null && !Number.isFinite(longitude)) {
-    return { error: "Invalid longitude." };
+    return { error: "La longitud no es válida." };
   }
 
   if (latitude !== null && (latitude < -90 || latitude > 90)) {
-    return { error: "Invalid latitude." };
+    return { error: "La latitud no es válida." };
   }
 
   if (longitude !== null && (longitude < -180 || longitude > 180)) {
-    return { error: "Invalid longitude." };
+    return { error: "La longitud no es válida." };
   }
 
   let event;
@@ -261,6 +261,15 @@ export async function createEvent(
   const latitudeValue = formData.get("latitude");
   const longitudeValue = formData.get("longitude");
 
+  const values = {
+    title: typeof title === "string" ? title : "",
+    category: typeof category === "string" ? category : "",
+    date: typeof date === "string" ? date : "",
+    time: typeof time === "string" ? time : "",
+    location: typeof location === "string" ? location : "",
+    description: typeof description === "string" ? description : "",
+  };
+
   const latitude =
     typeof latitudeValue === "string" && latitudeValue.trim()
       ? Number(latitudeValue)
@@ -274,47 +283,47 @@ export async function createEvent(
   const { userId } = await auth();
 
   if (!userId) {
-    return { error: "User needs to be authenticated." };
+    return { error: "Debes iniciar sesión." };
   }
 
   if (!isString(title) || !title.trim()) {
-    return { error: "Title is invalid." };
+    return { error: "El título no es válido.", values };
   }
 
   if (!isValidCategory(category)) {
-    return { error: "Category is invalid." };
+    return { error: "La categoría no es válida." };
   }
 
   if (!isString(date) || !date.trim()) {
-    return { error: "Date is invalid." };
+    return { error: "La fecha no es válida.", values };
   }
 
   if (!isString(time) || !time.trim()) {
-    return { error: "Time is invalid." };
+    return { error: "La hora no es válida.", values };
   }
 
   if (!isString(location) || !location.trim()) {
-    return { error: "Location is invalid." };
+    return { error: "La ubicación no es válida.", values };
   }
 
   if (!isString(description) || !description.trim()) {
-    return { error: "Description is invalid." };
+    return { error: "La descripción no es válida.", values };
   }
 
   if (latitude !== null && !Number.isFinite(latitude)) {
-    return { error: "Invalid latitude." };
+    return { error: "La latitud no es válida.", values };
   }
 
   if (longitude !== null && !Number.isFinite(longitude)) {
-    return { error: "Invalid longitude." };
+    return { error: "La latitud no es válida.", values };
   }
 
   if (latitude !== null && (latitude < -90 || latitude > 90)) {
-    return { error: "Invalid latitude." };
+    return { error: "La latitud no es válida.", values };
   }
 
   if (longitude !== null && (longitude < -180 || longitude > 180)) {
-    return { error: "Invalid longitude." };
+    return { error: "La latitud no es válida.", values };
   }
 
   let imageKey: string | null = null;
@@ -368,7 +377,7 @@ export async function setEventHidden(eventId: string, isHidden: boolean) {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    throw new Error("No autorizado.");
   }
 
   const event = await prisma.event.findUnique({
@@ -378,11 +387,11 @@ export async function setEventHidden(eventId: string, isHidden: boolean) {
   });
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new Error("Evento no encontrado.");
   }
 
   if (event.userId !== userId) {
-    throw new Error("Unauthorized");
+    throw new Error("No autorizado.");
   }
 
   await prisma.event.update({

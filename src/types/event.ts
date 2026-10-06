@@ -12,6 +12,16 @@ export type EventCategory =
   | typeof MEETUP;
 export const validCategoryOptions = [GARAGE_SALE, KERMESSE, FERIA, MEETUP];
 
+export type EventFormValues = {
+  title?: string;
+  category?: string;
+  date?: string;
+  time?: string;
+  location?: string;
+  description?: string;
+};
+
 export type CreateEventState = {
   error: string | null;
+  values?: EventFormValues;
 };

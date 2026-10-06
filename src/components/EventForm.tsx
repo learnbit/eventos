@@ -4,7 +4,14 @@ import { createEvent, updateEvent } from "@/actions/event";
 import { Event, FERIA, GARAGE_SALE, KERMESSE, MEETUP } from "@/types/event";
 import { getDateAndTime } from "@/utils/date";
 import Image from "next/image";
-import { ChangeEvent, useActionState, useCallback, useState } from "react";
+import {
+  ChangeEvent,
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import SubmitButton from "./SubmitButton";
 import { getEventImageUrl } from "@/utils/image";
 import {
@@ -41,6 +48,8 @@ export default function EventForm({ event }: EventFormProps) {
   const [state, formAction] = useActionState(action, {
     error: null,
   });
+
+  const errorRef = useRef<HTMLParagraphElement>(null);
 
   const formTitle = event ? "Modificar evento" : "Crear evento";
   const buttonText = event ? "Guardar cambios" : "Enviar a revision";
@@ -97,6 +106,15 @@ export default function EventForm({ event }: EventFormProps) {
     []
   );
 
+  useEffect(() => {
+    if (state.error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [state.error]);
+
   return (
     <form className="w-full flex flex-col gap-5" action={formAction}>
       <div>
@@ -115,7 +133,7 @@ export default function EventForm({ event }: EventFormProps) {
           type="text"
           name="title"
           className={inputClassName}
-          defaultValue={event?.title}
+          defaultValue={state.values?.title ?? event?.title ?? ""}
           required
         />
       </div>
@@ -125,7 +143,7 @@ export default function EventForm({ event }: EventFormProps) {
         <select
           name="category"
           className={inputClassName}
-          defaultValue={event?.category}
+          defaultValue={state.values?.category ?? event?.category}
         >
           <option value={GARAGE_SALE}>Venta de garaje</option>
           <option value={KERMESSE}>Kermesse</option>
@@ -167,7 +185,7 @@ export default function EventForm({ event }: EventFormProps) {
           <input
             type="date"
             className={inputClassName}
-            defaultValue={date}
+            defaultValue={state.values?.date ?? date}
             name="date"
             required
           />
@@ -178,7 +196,7 @@ export default function EventForm({ event }: EventFormProps) {
           <input
             type="time"
             className={inputClassName}
-            defaultValue={time}
+            defaultValue={state.values?.time ?? time}
             name="time"
             required
           />
@@ -216,7 +234,7 @@ export default function EventForm({ event }: EventFormProps) {
         <label className="text-sm font-medium">Descripcion</label>
         <textarea
           className={`${inputClassName} min-h-36 resize-y`}
-          defaultValue={event?.description}
+          defaultValue={state.values?.description ?? event?.description ?? ""}
           name="description"
           required
         />
