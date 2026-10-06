@@ -25,6 +25,20 @@ describe("slugify", () => {
   it("replaces special characters and extra spaces", () => {
     expect(slugify("  Feria & Kermesse 2026!!! ")).toBe("feria-kermesse-2026");
   });
+
+  it("normalizes styled unicode characters", () => {
+    expect(slugify("𝙁𝙚𝙨𝙩𝙞𝙫𝙖𝙡 𝙙𝙚 𝙘𝙖𝙧𝙣𝙚𝙨 𝙖 𝙡𝙖 𝙘𝙧𝙪𝙯 𝙮 𝙖 𝙡𝙖 𝙥𝙖𝙧𝙧𝙞𝙡𝙡𝙖")).toBe(
+      "festival-de-carnes-a-la-cruz-y-a-la-parrilla"
+    );
+  });
+
+  it("removes accents", () => {
+    expect(slugify("Feria de la Salteña")).toBe("feria-de-la-saltena");
+  });
+
+  it("removes extra separators", () => {
+    expect(slugify("  Feria --- Cochabamba!!!  ")).toBe("feria-cochabamba");
+  });
 });
 
 describe("createSlug", () => {

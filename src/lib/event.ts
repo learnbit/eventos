@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 
 export function slugify(title: string) {
   return title
+    .normalize("NFKD")
     .toLowerCase()
-    .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
@@ -12,6 +12,10 @@ export function slugify(title: string) {
 
 export async function createSlug(title: string, eventIdToIgnore?: string) {
   const baseSlug = slugify(title);
+
+  if (!baseSlug) {
+    throw new Error("Unable to generate slug from event title.");
+  }
 
   let slug = baseSlug;
   let counter = 2;
