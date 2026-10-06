@@ -57,7 +57,7 @@ export default function EventLocationMap({
         className="h-64 w-full overflow-hidden rounded-lg lg:aspect-[16/9] lg:h-auto"
       />
 
-      <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-2 flex flex-col gap-3 sm:flex-row">
         <a
           href={googleMapsUrl}
           target="_blank"

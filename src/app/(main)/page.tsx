@@ -24,7 +24,7 @@ export default async function AppPage({ searchParams }: AppPageProps) {
         </p>
       </div>
 
-      <CategoryFilter key={category || "all"} activeCategory={category} />
+      <CategoryFilter activeCategory={category} />
 
       {events.length === 0 ? (
         <div className="mt-10 text-center text-muted">
