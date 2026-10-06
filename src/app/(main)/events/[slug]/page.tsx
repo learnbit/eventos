@@ -99,8 +99,8 @@ export default async function EventPage({
           </Link>
         )}
       </div>
-      <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-        <div className="order-2 lg:order-1 mt-2 lg:mt-0">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+        <div className="order-2 min-w-0 lg:order-1 mt-2 lg:mt-0">
           {eventImageUrl ? (
             <EventImage
               src={eventImageUrl}
@@ -116,7 +116,7 @@ export default async function EventPage({
           )}
         </div>
 
-        <div className="order-1 lg:order-2 flex flex-col">
+        <div className="order-1 min-w-0 lg:order-2 flex flex-col">
           <p className="text-sm text-primary">
             {categoryLabels[event.category] ?? event.category}
           </p>
