@@ -81,7 +81,7 @@ export default async function EventPage({
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <Link
           className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
           href={backHref}
@@ -100,21 +100,23 @@ export default async function EventPage({
         )}
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-        {eventImageUrl ? (
-          <EventImage
-            src={eventImageUrl}
-            alt={event.title}
-            stretchOnDesktop={hasLocation}
-          />
-        ) : (
-          <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
-            <div className="flex h-full items-center justify-center text-sm text-muted">
-              Sin imagen
+        <div className="order-2 lg:order-1 mt-2 lg:mt-0">
+          {eventImageUrl ? (
+            <EventImage
+              src={eventImageUrl}
+              alt={event.title}
+              stretchOnDesktop={hasLocation}
+            />
+          ) : (
+            <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface">
+              <div className="flex h-full items-center justify-center text-sm text-muted">
+                Sin imagen
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        <div className="flex flex-col">
+        <div className="order-1 lg:order-2 flex flex-col">
           <p className="text-sm text-primary">
             {categoryLabels[event.category] ?? event.category}
           </p>
@@ -123,7 +125,7 @@ export default async function EventPage({
             {event.title}
           </h1>
 
-          <div className="mt-6 space-y-2 text-sm text-muted">
+          <div className="mt-4 space-y-2 text-sm text-muted">
             <p>{formatDate(event.date)}</p>
             <p>{event.location}</p>
             {event.latitude != null && event.longitude != null && (

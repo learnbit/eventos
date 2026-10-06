@@ -21,7 +21,7 @@ export default function EventImage({
       <button
         type="button"
         className={`relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface cursor-pointer ${
-          stretchOnDesktop ? "lg:aspect-auto lg:self-stretch" : ""
+          stretchOnDesktop ? "lg:h-full lg:self-stretch" : ""
         }`}
         aria-label="Ampliar imagen"
         onClick={() => setOpen(true)}
