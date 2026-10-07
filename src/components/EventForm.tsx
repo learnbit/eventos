@@ -49,7 +49,7 @@ export default function EventForm({ event }: EventFormProps) {
     error: null,
   });
 
-  const errorRef = useRef<HTMLParagraphElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const formTitle = event ? "Modificar evento" : "Crear evento";
   const buttonText = event ? "Guardar cambios" : "Enviar a revision";
@@ -108,15 +108,19 @@ export default function EventForm({ event }: EventFormProps) {
 
   useEffect(() => {
     if (state.error) {
-      errorRef.current?.scrollIntoView({
+      formRef.current?.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "start",
       });
     }
-  }, [state.error]);
+  }, [state]);
 
   return (
-    <form className="w-full flex flex-col gap-5" action={formAction}>
+    <form
+      ref={formRef}
+      className="w-full flex flex-col gap-5"
+      action={formAction}
+    >
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{formTitle}</h1>
 
