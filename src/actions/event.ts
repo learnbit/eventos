@@ -5,7 +5,6 @@ import { createSlug } from "@/lib/event";
 import { prisma } from "@/lib/prisma";
 import { deleteFileFromS3, uploadFileToS3 } from "@/lib/s3";
 import { sendTelegramMessage } from "@/lib/telegram";
-import { createEventRecord } from "@/services/event";
 import {
   CreateEventState,
   EventCategory,
@@ -337,20 +336,8 @@ export async function createEvent(
 
     const eventDate = new Date(`${date}T${time}:00`);
 
-    // const payload = {
-    //   slug: await createSlug(title),
-    //   title,
-    //   category,
-    //   date: eventDate,
-    //   latitude,
-    //   longitude,
-    //   location,
-    //   description,
-    //   userId,
-    //   image: imageKey,
-    // };
-
-    event = await createEventRecord({
+    const payload = {
+      slug: await createSlug(title),
       title,
       category,
       date: eventDate,
@@ -360,6 +347,10 @@ export async function createEvent(
       description,
       userId,
       image: imageKey,
+    };
+
+    event = await prisma.event.create({
+      data: payload,
     });
 
     try {
