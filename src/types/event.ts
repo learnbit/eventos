@@ -21,6 +21,18 @@ export type EventFormValues = {
   description?: string;
 };
 
+export type CreateEventInput = {
+  title: string;
+  category: EventCategory;
+  date: Date;
+  location: string;
+  description: string;
+  userId: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  image?: string | null;
+};
+
 export type CreateEventState = {
   error: string | null;
   values?: EventFormValues;
